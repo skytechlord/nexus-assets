@@ -1,0 +1,202 @@
+/* ================================================================
+   error.css — Styles for the 404 "Page Not Found" page
+   ================================================================
+   WHY A SEPARATE FILE?
+   The 404 page has a unique full-screen centered layout that no
+   other page uses — it's not a list page, not a prose page, not
+   a form page. It deserves its own small stylesheet rather than
+   bloating global.css or pages.css with one-off rules.
+
+   DESIGN GOAL:
+   Keep it on-brand (same dark theme, same purple accent, same
+   fonts) but give it a bit of personality since this is the page
+   people land on by accident — a friendly tone here matters.
+================================================================ */
+
+
+/* ================================================================
+   FULL-SCREEN WRAPPER
+   ================================================================
+   We want the 404 content perfectly centered in the viewport,
+   below the fixed nav bar. min-height: 100vh makes the wrapper
+   at least as tall as the screen, even if content is short.
+================================================================ */
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--nav-height);  /* Pushes content below the fixed nav */
+  padding-bottom: var(--space-2xl);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.error-page__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 560px;
+  padding: var(--space-lg);
+}
+
+
+/* ================================================================
+   THE BIG "404" NUMBER
+   ================================================================
+   Uses the display font (Syne) at a huge size for visual impact.
+   The gradient text effect uses background-clip — a neat CSS
+   trick where the gradient fills the literal shape of the letters.
+================================================================ */
+.error-code {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 18vw, 9rem);
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: var(--space-md);
+
+  /* Gradient text trick:
+     1. Apply a gradient as the background
+     2. Clip the background to the text shape only
+     3. Make the text itself transparent so the gradient shows through */
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+  /* Subtle floating animation for a touch of life */
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Floating up-and-down animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+.error-title {
+  margin-bottom: var(--space-md);
+  font-size: clamp(1.4rem, 4vw, 1.9rem);
+}
+
+.error-message {
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 440px;
+  margin: 0 auto var(--space-xl);
+}
+
+/* Highlight the missing-path text differently if we show it */
+.error-message code {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: var(--color-accent);
+}
+
+
+/* ================================================================
+   ACTION BUTTONS
+================================================================ */
+.error-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-2xl);
+}
+
+
+/* ================================================================
+   "TRY THESE INSTEAD" QUICK LINKS
+   ================================================================
+   Helps lost visitors find their way without leaving the site.
+   Small pill-shaped links to the most important pages.
+================================================================ */
+.error-suggestions {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-xl);
+}
+
+.error-suggestions__label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-md);
+}
+
+.error-suggestions__links {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.error-suggestions__links a {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 0.4rem 1rem;
+  transition: all var(--transition);
+}
+
+.error-suggestions__links a:hover {
+  color: var(--color-white);
+  border-color: var(--color-accent);
+  background: rgba(124,106,245,0.08);
+}
+
+
+/* ================================================================
+   DECORATIVE GLOW BLOBS
+   ================================================================
+   Same blurred-circle technique used on the homepage hero and
+   the page-hero banners — keeps the visual language consistent
+   across the whole site.
+================================================================ */
+.error-page__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.error-page__glow--1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(124,106,245,0.16), transparent 70%);
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.error-page__glow--2 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(245,166,35,0.10), transparent 70%);
+  bottom: -80px;
+  right: 5%;
+}
+
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media (max-width: 600px) {
+  .error-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .error-actions .btn {
+    justify-content: center;
+  }
+}

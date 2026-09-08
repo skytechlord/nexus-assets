@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog & Articles — NexusAssets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/blog.css" />
+</head>
+<body>
+
+  <!-- ── Navigation ───────────────────────────────────────────── -->
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="../index.html" class="nav__logo">Nexus<span>Assets</span></a>
+      <ul class="nav__links">
+        <li><a href="../index.html" class="nav__link">Home</a></li>
+        <li><a href="resources.html" class="nav__link">Browse</a></li>
+        <li><a href="blog.html" class="nav__link active">Blog</a></li>
+        <li><a href="about.html" class="nav__link">About</a></li>
+      </ul>
+      <a href="resources.html" class="btn btn--primary">Browse Free Assets</a>
+      <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="resources.html">Browse</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <main>
+
+    <!-- ── Page header ──────────────────────────────────────────── -->
+    <section class="blog-header">
+      <div class="container">
+        <h1>Blog & Articles</h1>
+        <p>Tutorials, tips, and guides for 3D artists and creators</p>
+      </div>
+    </section>
+
+    <!-- ── Filter bar ───────────────────────────────────────────── -->
+    <!--
+      Each button has data-category="" which JS reads on click.
+      Categories match the ones used in BLOG_POSTS in data.js.
+    -->
+    <div class="blog-filter-bar">
+      <div class="container">
+        <div class="blog-filter-bar__inner">
+          <span class="blog-filter-bar__label">Topic:</span>
+          <button class="blog-filter-btn active" data-category="all">All</button>
+          <button class="blog-filter-btn" data-category="blender">🎨 Blender</button>
+          <button class="blog-filter-btn" data-category="vfx">✨ VFX</button>
+          <button class="blog-filter-btn" data-category="models">🧊 3D Models</button>
+          <button class="blog-filter-btn" data-category="textures">🖼 Textures</button>
+          <button class="blog-filter-btn" data-category="templates">📐 Design</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Articles section ─────────────────────────────────────── -->
+    <section class="blog-section">
+      <div class="container">
+
+        <!-- Results count — updated by JS -->
+        <p class="blog-results-info" id="blogResultsCount">
+          Showing <span>0</span> articles
+        </p>
+
+        <!--
+          Card grid — populated entirely by JavaScript.
+          The first card rendered will automatically get the
+          .article-card--featured class for the wide hero layout.
+        -->
+        <div class="blog-grid" id="blogGrid"></div>
+
+        <!-- Empty state -->
+        <div class="blog-empty" id="blogEmpty">
+          <div class="blog-empty__icon">📭</div>
+          <h3>No articles found</h3>
+          <p>Try a different category filter.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="../index.html" class="nav__logo">Nexus<span>Assets</span></a>
+        <p>Free creative resources for artists, designers, and 3D enthusiasts.</p>
+      </div>
+      <div class="footer__links">
+        <h4>Browse</h4>
+        <ul>
+          <li><a href="resources.html?category=blender">Blender</a></li>
+          <li><a href="resources.html?category=vfx">VFX</a></li>
+          <li><a href="resources.html?category=models">3D Models</a></li>
+          <li><a href="resources.html?category=textures">Textures</a></li>
+        </ul>
+      </div>
+      <div class="footer__links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom container">
+      <p>© 2025 NexusAssets. Built for creators.</p>
+    </div>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/main.js"></script>
+
+</body>
+</html>

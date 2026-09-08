@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexusAssets — Free Creative Resources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+
+  <!-- ── Navigation ───────────────────────────────────────────── -->
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="nav__logo">Nexus<span>Assets</span></a>
+      <ul class="nav__links">
+        <li><a href="index.html" class="nav__link active">Home</a></li>
+        <li><a href="pages/resources.html" class="nav__link">Browse</a></li>
+        <li><a href="#categories" class="nav__link">Categories</a></li>
+        <li><a href="#" class="nav__link">Blog</a></li>
+      </ul>
+      <a href="pages/resources.html" class="btn btn--primary">Browse Free Assets</a>
+      <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="pages/resources.html">Browse</a></li>
+      <li><a href="#categories">Categories</a></li>
+      <li><a href="#">Blog</a></li>
+    </ul>
+  </div>
+
+  <main>
+
+    <!-- ── Hero ─────────────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="container hero__inner">
+        <span class="hero__badge">100% Free Downloads</span>
+        <h1 class="hero__title">Creative Assets<br /><em>Built for Artists</em></h1>
+        <p class="hero__sub">
+          Download free Blender addons, 3D models, VFX packs, textures,
+          and design templates. Everything you need to create faster.
+        </p>
+        <div class="hero__actions">
+          <a href="pages/resources.html" class="btn btn--primary btn--lg">Explore Resources</a>
+          <a href="#categories" class="btn btn--ghost btn--lg">Browse Categories</a>
+        </div>
+        <div class="hero__stats">
+          <div class="hero__stat"><strong>200+</strong><span>Free Assets</span></div>
+          <div class="hero__stat"><strong>12k+</strong><span>Downloads</span></div>
+          <div class="hero__stat"><strong>5</strong><span>Categories</span></div>
+        </div>
+      </div>
+      <div class="hero__glow hero__glow--1" aria-hidden="true"></div>
+      <div class="hero__glow hero__glow--2" aria-hidden="true"></div>
+    </section>
+
+    <!-- ── Categories ───────────────────────────────────────────── -->
+    <section class="categories section" id="categories">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Browse by Category</h2>
+          <p class="section-sub">Find exactly what you need</p>
+        </div>
+        <div class="category-grid">
+          <a href="pages/resources.html?category=blender" class="category-card">
+            <div class="category-card__icon">🎨</div>
+            <h3 class="category-card__name">Blender</h3>
+            <p class="category-card__desc">Addons, rigs, scenes & more</p>
+            <span class="category-card__count">48 assets</span>
+          </a>
+          <a href="pages/resources.html?category=vfx" class="category-card">
+            <div class="category-card__icon">✨</div>
+            <h3 class="category-card__name">VFX</h3>
+            <p class="category-card__desc">Particles, overlays & effects</p>
+            <span class="category-card__count">35 assets</span>
+          </a>
+          <a href="pages/resources.html?category=models" class="category-card category-card--featured">
+            <div class="category-card__icon">🧊</div>
+            <h3 class="category-card__name">3D Models</h3>
+            <p class="category-card__desc">Characters, props & environments</p>
+            <span class="category-card__count">62 assets</span>
+          </a>
+          <a href="pages/resources.html?category=textures" class="category-card">
+            <div class="category-card__icon">🖼</div>
+            <h3 class="category-card__name">Textures</h3>
+            <p class="category-card__desc">PBR, seamless & HDRI maps</p>
+            <span class="category-card__count">55 assets</span>
+          </a>
+          <a href="pages/resources.html?category=templates" class="category-card">
+            <div class="category-card__icon">📐</div>
+            <h3 class="category-card__name">Templates</h3>
+            <p class="category-card__desc">Motion, print & UI kits</p>
+            <span class="category-card__count">29 assets</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Featured resources ────────────────────────────────────── -->
+    <section class="featured section">
+      <div class="container">
+        <div class="section-header section-header--flex">
+          <div>
+            <h2 class="section-title">Featured Resources</h2>
+            <p class="section-sub">Hand-picked by our team</p>
+          </div>
+          <a href="pages/resources.html" class="btn btn--outline">View All</a>
+        </div>
+        <!-- Cards injected here by main.js → renderResourceCards() -->
+        <div class="resource-grid" id="featuredGrid"></div>
+      </div>
+    </section>
+
+    <!-- ── Why us ────────────────────────────────────────────────── -->
+    <section class="features section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Why NexusAssets?</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-card__icon">⚡</div>
+            <h3>Instant Downloads</h3>
+            <p>No sign-up required. Click download and get your asset immediately.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon">🔓</div>
+            <h3>Free Forever</h3>
+            <p>Core assets are always free. No paywalls, no credit systems.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon">📦</div>
+            <h3>Ready to Use</h3>
+            <p>Every asset is tested and comes with documentation or a README.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon">🔄</div>
+            <h3>Updated Regularly</h3>
+            <p>New assets added weekly across all categories.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="index.html" class="nav__logo">Nexus<span>Assets</span></a>
+        <p>Free creative resources for artists, designers, and 3D enthusiasts.</p>
+      </div>
+      <div class="footer__links">
+        <h4>Browse</h4>
+        <ul>
+          <li><a href="pages/resources.html?category=blender">Blender</a></li>
+          <li><a href="pages/resources.html?category=vfx">VFX</a></li>
+          <li><a href="pages/resources.html?category=models">3D Models</a></li>
+          <li><a href="pages/resources.html?category=textures">Textures</a></li>
+        </ul>
+      </div>
+      <div class="footer__links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="pages/about.html">About Us</a></li>
+          <li><a href="pages/contact.html">Contact</a></li>
+          <li><a href="pages/privacy.html">Privacy Policy</a></li>
+          <li><a href="pages/terms.html">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom container">
+      <p>© 2025 NexusAssets. Built for creators.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

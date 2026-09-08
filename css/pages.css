@@ -1,0 +1,573 @@
+/* ================================================================
+   pages.css — Shared styles for About, Contact, Privacy, Terms
+   ================================================================
+   All four info pages share the same layout patterns:
+   - A page hero banner at the top
+   - A content area with readable prose width
+   - Info cards / stat blocks
+   - A consistent section spacing rhythm
+
+   This keeps things DRY (Don't Repeat Yourself) — one file
+   instead of four separate ones.
+================================================================ */
+
+
+/* ================================================================
+   PAGE HERO
+   ================================================================
+   The banner at the top of every info page.
+   Smaller than the homepage hero — just enough to set context.
+================================================================ */
+.page-hero {
+  padding-top: calc(var(--nav-height) + var(--space-3xl));
+  padding-bottom: var(--space-2xl);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.page-hero__inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* Small label above the title — e.g. "Who we are" */
+.page-hero__label {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  background: rgba(124,106,245,0.12);
+  border: 1px solid rgba(124,106,245,0.25);
+  border-radius: var(--radius-full);
+  padding: 5px 14px;
+  margin-bottom: var(--space-lg);
+}
+
+.page-hero__title {
+  margin-bottom: var(--space-md);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+.page-hero__sub {
+  font-size: 1.05rem;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Decorative glow — same technique as homepage hero */
+.page-hero__glow {
+  position: absolute;
+  width: 600px;
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(124,106,245,0.12), transparent 70%);
+  filter: blur(60px);
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+
+/* ================================================================
+   PAGE LAYOUT
+   ================================================================
+   Two layout options:
+   1. .page-content — single centered column (prose pages like Privacy)
+   2. .page-layout  — two columns: main content + sidebar (About, Contact)
+================================================================ */
+
+/* Outer wrapper with top/bottom padding */
+.page-body {
+  padding-top: var(--space-3xl);
+  padding-bottom: var(--space-3xl);
+}
+
+/* Single-column centered prose (max ~720px for comfortable reading) */
+.page-content {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Two-column layout: content left, sidebar right */
+.page-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+
+/* ================================================================
+   PROSE STYLES
+   ================================================================
+   Styles for long-form text content like Privacy Policy and Terms.
+   Makes the text comfortable and easy to scan.
+================================================================ */
+
+/* A named content section with its own heading */
+.prose-section {
+  margin-bottom: var(--space-2xl);
+}
+
+.prose-section:last-child {
+  margin-bottom: 0;
+}
+
+.prose-section h2 {
+  font-size: 1.3rem;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prose-section h3 {
+  font-size: 1rem;
+  color: var(--color-text);
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.prose-section p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.prose-section p:last-child {
+  margin-bottom: 0;
+}
+
+/* Bulleted list inside prose */
+.prose-section ul {
+  list-style: none;
+  margin: var(--space-md) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.prose-section ul li {
+  font-size: 0.93rem;
+  color: var(--color-text-muted);
+  padding-left: 1.4rem;
+  position: relative;
+  line-height: 1.7;
+}
+
+/* Custom bullet using ::before pseudo-element */
+.prose-section ul li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* Highlighted callout box */
+.prose-callout {
+  background: rgba(124,106,245,0.07);
+  border: 1px solid rgba(124,106,245,0.2);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin: var(--space-lg) 0;
+}
+
+.prose-callout p {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* Last updated / effective date meta line */
+.prose-meta {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Inline link inside prose */
+.prose-link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition);
+}
+.prose-link:hover {
+  color: #a99cf8;
+}
+
+
+/* ================================================================
+   INFO CARDS
+   ================================================================
+   Used on the About page for values/mission blocks,
+   and on the sidebar for contact details.
+================================================================ */
+.info-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  transition: border-color var(--transition);
+}
+
+.info-card:hover {
+  border-color: var(--color-accent);
+}
+
+.info-card__icon {
+  font-size: 1.8rem;
+  margin-bottom: var(--space-md);
+}
+
+.info-card h3 {
+  font-size: 1rem;
+  color: var(--color-white);
+  margin-bottom: var(--space-sm);
+}
+
+.info-card p {
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* Grid of info cards */
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+
+/* ================================================================
+   STAT BLOCKS
+   ================================================================
+   Used on About page to show numbers like "15 assets", "5 categories"
+================================================================ */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-lg);
+  margin: var(--space-2xl) 0;
+}
+
+.stat-block {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl) var(--space-lg);
+  text-align: center;
+}
+
+.stat-block__number {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  color: var(--color-white);
+  line-height: 1;
+  margin-bottom: var(--space-sm);
+}
+
+.stat-block__label {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+
+/* ================================================================
+   TEAM CARDS (About page)
+================================================================ */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.team-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl) var(--space-lg);
+  text-align: center;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.team-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+}
+
+/* Avatar circle with initials */
+.team-card__avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent), #a99cf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-md);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--color-white);
+  font-weight: 800;
+}
+
+.team-card__name {
+  font-size: 1rem;
+  color: var(--color-white);
+  margin-bottom: var(--space-xs);
+}
+
+.team-card__role {
+  font-size: 0.8rem;
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+
+/* ================================================================
+   CONTACT FORM
+   ================================================================
+   The form on contact.html.
+   We use <div> wrappers and event listeners — no <form> tag
+   so it works cleanly without a backend.
+================================================================ */
+.contact-form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+}
+
+.contact-form h2 {
+  font-size: 1.4rem;
+  margin-bottom: var(--space-xs);
+}
+
+.contact-form .form-sub {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+/* Field group: label + input stacked vertically */
+.form-group {
+  margin-bottom: var(--space-lg);
+}
+
+.form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+/* Required field asterisk */
+.form-label .required {
+  color: var(--color-accent);
+  margin-left: 3px;
+}
+
+/* Shared styles for input, select, textarea */
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Purple glow on focus */
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(124,106,245,0.15);
+}
+
+.form-textarea {
+  resize: vertical;       /* Only allow vertical resizing */
+  min-height: 140px;
+  line-height: 1.6;
+}
+
+/* Dropdown */
+.form-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: none;
+}
+
+/* Row of two fields side by side */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+/* Submit button row */
+.form-actions {
+  margin-top: var(--space-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.form-note {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* Success message shown after submit */
+.form-success {
+  display: none;           /* Hidden until JS shows it */
+  text-align: center;
+  padding: var(--space-2xl) var(--space-lg);
+}
+
+.form-success.visible {
+  display: block;
+}
+
+.form-success__icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+}
+
+.form-success h3 {
+  margin-bottom: var(--space-sm);
+}
+
+
+/* ================================================================
+   CONTACT SIDEBAR ITEMS
+================================================================ */
+.contact-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-lg));
+}
+
+.contact-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+  transition: border-color var(--transition);
+}
+
+.contact-item:hover {
+  border-color: var(--color-accent);
+}
+
+.contact-item__icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.contact-item__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+
+.contact-item__value {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.contact-item__note {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}
+
+
+/* ================================================================
+   BREADCRUMB (used across all info pages)
+================================================================ */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+.breadcrumb a {
+  color: var(--color-text-muted);
+  transition: color var(--transition);
+}
+.breadcrumb a:hover { color: var(--color-accent); }
+
+.breadcrumb__sep { color: var(--color-border); }
+
+.breadcrumb__current { color: var(--color-text); }
+
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media (max-width: 900px) {
+  /* Stack two-column layouts */
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .contact-form {
+    padding: var(--space-lg);
+  }
+}

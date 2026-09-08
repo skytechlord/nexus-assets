@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — NexusAssets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+</head>
+<body>
+
+  <!-- ── Navigation ───────────────────────────────────────────── -->
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="../index.html" class="nav__logo">Nexus<span>Assets</span></a>
+      <ul class="nav__links">
+        <li><a href="../index.html" class="nav__link">Home</a></li>
+        <li><a href="resources.html" class="nav__link">Browse</a></li>
+        <li><a href="about.html" class="nav__link">About</a></li>
+        <li><a href="contact.html" class="nav__link active">Contact</a></li>
+      </ul>
+      <a href="resources.html" class="btn btn--primary">Browse Free Assets</a>
+      <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="resources.html">Browse</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <main>
+
+    <!-- ── Page hero ─────────────────────────────────────────── -->
+    <section class="page-hero">
+      <div class="page-hero__glow" aria-hidden="true"></div>
+      <div class="container page-hero__inner">
+        <span class="page-hero__label">Get in touch</span>
+        <h1 class="page-hero__title">We'd Love to<br /><em>Hear From You</em></h1>
+        <p class="page-hero__sub">
+          Have a question, want to submit an asset, or spotted a bug?
+          Drop us a message and we'll get back to you within 48 hours.
+        </p>
+      </div>
+    </section>
+
+    <div class="page-body">
+      <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span class="breadcrumb__sep">›</span>
+          <span class="breadcrumb__current">Contact</span>
+        </nav>
+
+        <!-- ── Two-column layout: form left, info right ──────── -->
+        <div class="page-layout">
+
+          <!-- ── LEFT: Contact form ─────────────────────────── -->
+          <div class="contact-form">
+
+            <h2>Send a Message</h2>
+            <p class="form-sub">All fields marked with * are required.</p>
+
+            <!--
+              WHY NO <form> TAG?
+              We're using a <div> instead of <form> because we have
+              no backend to handle form submissions yet.
+              JavaScript intercepts the button click, validates the
+              fields, and shows a success message instead.
+
+              In Phase 3 you'll replace this with a real <form> that
+              POSTs to your server, or use a service like Formspree.
+            -->
+            <div id="contactFormFields">
+
+              <!-- Name row: two fields side by side -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="firstName">
+                    First Name <span class="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    class="form-input"
+                    placeholder="Your first name"
+                    autocomplete="given-name"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="lastName">
+                    Last Name <span class="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    class="form-input"
+                    placeholder="Your last name"
+                    autocomplete="family-name"
+                  />
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group">
+                <label class="form-label" for="email">
+                  Email Address <span class="required">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  class="form-input"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                />
+              </div>
+
+              <!-- Subject dropdown -->
+              <div class="form-group">
+                <label class="form-label" for="subject">
+                  What's this about? <span class="required">*</span>
+                </label>
+                <!--
+                  The <select> options give users clear categories.
+                  In Phase 3, these values get sent to your backend
+                  so you can route messages to the right team member.
+                -->
+                <select id="subject" class="form-select">
+                  <option value="" disabled selected>Select a topic...</option>
+                  <option value="asset-submission">Submit an Asset</option>
+                  <option value="bug-report">Report a Bug</option>
+                  <option value="content-removal">Content Removal Request</option>
+                  <option value="partnership">Partnership / Sponsorship</option>
+                  <option value="general">General Question</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <!-- Message -->
+              <div class="form-group">
+                <label class="form-label" for="message">
+                  Message <span class="required">*</span>
+                </label>
+                <textarea
+                  id="message"
+                  class="form-textarea"
+                  placeholder="Tell us what's on your mind..."
+                ></textarea>
+              </div>
+
+              <!-- Submit row -->
+              <div class="form-actions">
+                <!--
+                  id="submitBtn" is targeted by the JS below.
+                  We use a <button> not an <input type="submit">
+                  because we're handling submission manually.
+                -->
+                <button id="submitBtn" class="btn btn--primary btn--lg">
+                  Send Message
+                </button>
+                <span class="form-note">
+                  We usually reply within 48 hours.
+                </span>
+              </div>
+
+            </div>
+            <!-- end #contactFormFields -->
+
+            <!--
+              SUCCESS STATE
+              Hidden by default. JavaScript shows this and hides
+              #contactFormFields after a successful "submission".
+            -->
+            <div class="form-success" id="formSuccess">
+              <div class="form-success__icon">✅</div>
+              <h3>Message Sent!</h3>
+              <p>Thanks for reaching out. We'll get back to you within 48 hours.</p>
+            </div>
+
+          </div>
+          <!-- end .contact-form -->
+
+          <!-- ── RIGHT: Contact info sidebar ───────────────── -->
+          <aside class="contact-sidebar">
+
+            <div class="contact-item">
+              <div class="contact-item__icon">📧</div>
+              <div>
+                <div class="contact-item__label">Email</div>
+                <div class="contact-item__value">hello@nexusassets.io</div>
+                <div class="contact-item__note">For general enquiries</div>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item__icon">⏱</div>
+              <div>
+                <div class="contact-item__label">Response Time</div>
+                <div class="contact-item__value">Within 48 hours</div>
+                <div class="contact-item__note">Monday – Friday</div>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item__icon">📦</div>
+              <div>
+                <div class="contact-item__label">Asset Submissions</div>
+                <div class="contact-item__value">Always welcome</div>
+                <div class="contact-item__note">Use the form and select "Submit an Asset"</div>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item__icon">🐛</div>
+              <div>
+                <div class="contact-item__label">Bug Reports</div>
+                <div class="contact-item__value">Top priority</div>
+                <div class="contact-item__note">We fix reported issues within 72 hours</div>
+              </div>
+            </div>
+
+            <!-- Quick links card -->
+            <div class="info-card">
+              <h3>Quick Links</h3>
+              <ul style="margin-top:var(--space-md); display:flex; flex-direction:column; gap:var(--space-sm);">
+                <li style="list-style:none;">
+                  <a href="about.html" class="prose-link">→ About NexusAssets</a>
+                </li>
+                <li style="list-style:none;">
+                  <a href="privacy.html" class="prose-link">→ Privacy Policy</a>
+                </li>
+                <li style="list-style:none;">
+                  <a href="terms.html" class="prose-link">→ Terms & Conditions</a>
+                </li>
+              </ul>
+            </div>
+
+          </aside>
+
+        </div>
+        <!-- end .page-layout -->
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="../index.html" class="nav__logo">Nexus<span>Assets</span></a>
+        <p>Free creative resources for artists, designers, and 3D enthusiasts.</p>
+      </div>
+      <div class="footer__links">
+        <h4>Browse</h4>
+        <ul>
+          <li><a href="resources.html?category=blender">Blender</a></li>
+          <li><a href="resources.html?category=vfx">VFX</a></li>
+          <li><a href="resources.html?category=models">3D Models</a></li>
+          <li><a href="resources.html?category=textures">Textures</a></li>
+        </ul>
+      </div>
+      <div class="footer__links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms & Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom container">
+      <p>© 2025 NexusAssets. Built for creators.</p>
+    </div>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/main.js"></script>
+
+  <!--
+    CONTACT FORM JAVASCRIPT
+    ================================================================
+    Inline here because this logic is only needed on this one page.
+    It would be messy to put it in main.js which runs everywhere.
+
+    What it does:
+    1. Reads all field values when Submit is clicked
+    2. Validates that required fields aren't empty
+    3. Highlights empty fields with a red border
+    4. If valid: hides the form, shows the success message + toast
+  -->
+  <script>
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function () {
+
+        // Grab values from each field
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName  = document.getElementById('lastName').value.trim();
+        const email     = document.getElementById('email').value.trim();
+        const subject   = document.getElementById('subject').value;
+        const message   = document.getElementById('message').value.trim();
+
+        // Build a list of fields to validate
+        // Each object has the element and its value
+        const fields = [
+          { el: document.getElementById('firstName'), val: firstName },
+          { el: document.getElementById('lastName'),  val: lastName  },
+          { el: document.getElementById('email'),     val: email     },
+          { el: document.getElementById('subject'),   val: subject   },
+          { el: document.getElementById('message'),   val: message   },
+        ];
+
+        // Check for empty fields
+        let isValid = true;
+
+        fields.forEach(({ el, val }) => {
+          if (!val) {
+            // Highlight the empty field with a red border
+            el.style.borderColor = 'var(--color-error)';
+            el.style.boxShadow   = '0 0 0 3px rgba(248,113,113,0.15)';
+            isValid = false;
+          } else {
+            // Clear error styling on fields that are filled in
+            el.style.borderColor = '';
+            el.style.boxShadow   = '';
+          }
+        });
+
+        if (!isValid) {
+          // Show an error toast and stop here
+          showToast('Please fill in all required fields.', 'error', 3000);
+          return;
+        }
+
+        // Basic email format check using a regular expression (regex)
+        // The pattern /^[^\s@]+@[^\s@]+\.[^\s@]+$/ matches "x@y.z" format
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+          const emailEl = document.getElementById('email');
+          emailEl.style.borderColor = 'var(--color-error)';
+          emailEl.style.boxShadow   = '0 0 0 3px rgba(248,113,113,0.15)';
+          showToast('Please enter a valid email address.', 'error', 3000);
+          return;
+        }
+
+        // ── All valid: simulate submission ───────────────────
+        // Change button to a loading state while "submitting"
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled    = true;
+
+        // Simulate a network delay (like a real API call)
+        // In Phase 3, replace this with: fetch('/api/contact', { method:'POST', body:... })
+        setTimeout(() => {
+          // Hide the form fields
+          document.getElementById('contactFormFields').style.display = 'none';
+          // Show the success message
+          document.getElementById('formSuccess').classList.add('visible');
+          // Show a toast too
+          showToast('Message sent successfully!', 'success', 4000);
+        }, 1200);
+
+      });
+
+      // ── Clear error styling when user starts typing ──────────
+      // This gives instant feedback that they've fixed the problem
+      ['firstName', 'lastName', 'email', 'subject', 'message'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', function () {
+            this.style.borderColor = '';
+            this.style.boxShadow   = '';
+          });
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

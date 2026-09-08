@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Download Asset — NexusAssets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/download.css" />
+</head>
+<body>
+
+  <!-- ── Navigation ───────────────────────────────────────────── -->
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="../index.html" class="nav__logo">Nexus<span>Assets</span></a>
+      <ul class="nav__links">
+        <li><a href="../index.html" class="nav__link">Home</a></li>
+        <li><a href="resources.html" class="nav__link active">Browse</a></li>
+        <li><a href="../index.html#categories" class="nav__link">Categories</a></li>
+        <li><a href="#" class="nav__link">Blog</a></li>
+      </ul>
+      <a href="resources.html" class="btn btn--primary">Browse Free Assets</a>
+      <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="resources.html">Browse</a></li>
+      <li><a href="../index.html#categories">Categories</a></li>
+      <li><a href="#">Blog</a></li>
+    </ul>
+  </div>
+
+  <main>
+    <div class="download-page">
+      <div class="container">
+
+        <a href="resources.html" class="back-link">← Back to Browse</a>
+
+        <!-- ── Two-column layout ──────────────────────────────── -->
+        <div class="download-layout">
+
+          <!-- ── LEFT: Asset details ─────────────────────────── -->
+          <div class="asset-content">
+
+            <!--
+              FEATURE 1: Real image preview with emoji fallback.
+
+              .asset-preview-wrap is the box.
+              Inside it are TWO elements:
+                1. <img id="assetPreviewImg">  — the real photo (shown first)
+                2. <div id="assetPreviewEmoji"> — emoji fallback (hidden initially)
+
+              main.js sets img.src = asset.image, then:
+              - If image loads: hides the emoji div
+              - If image errors: hides the img, shows the emoji div
+            -->
+            <div class="asset-preview-wrap">
+              <img id="assetPreviewImg" src="" alt="" />
+              <div id="assetPreviewEmoji">⏳</div>
+            </div>
+
+            <!-- Category tag — text set by JS -->
+            <span class="asset-tag" id="assetCategory">Loading...</span>
+
+            <!-- Title — set by JS -->
+            <h1 class="asset-title" id="assetTitle">Loading asset...</h1>
+
+            <!-- Description — set by JS -->
+            <p class="asset-description" id="assetDescription">
+              Please wait while we load the asset details.
+            </p>
+
+            <!-- Tag pills — HTML injected by JS -->
+            <div class="asset-tags" id="assetTags"></div>
+
+            <!-- Technical details table -->
+            <div class="asset-details">
+              <h3>Asset Details</h3>
+
+              <div class="detail-row">
+                <span class="detail-row__label">File Size</span>
+                <span class="detail-row__value" id="assetFileSize">—</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-row__label">File Format</span>
+                <span class="detail-row__value" id="assetFileFormat">—</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-row__label">Version</span>
+                <span class="detail-row__value" id="assetVersion">—</span>
+              </div>
+              <!--
+                This row is hidden by JS when asset.blenderVersion is null.
+                Only Blender assets have a Blender version requirement.
+              -->
+              <div class="detail-row" id="blenderVersionRow">
+                <span class="detail-row__label">Blender Version</span>
+                <span class="detail-row__value" id="assetBlenderVersion">—</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-row__label">License</span>
+                <span class="detail-row__value">CC0 — Free to use</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-row__label">Total Downloads</span>
+                <span class="detail-row__value" id="assetDownloads">—</span>
+              </div>
+            </div>
+
+          </div>
+          <!-- end .asset-content -->
+
+          <!-- ── RIGHT: Download sidebar ─────────────────────── -->
+          <aside class="download-sidebar">
+
+            <div class="download-card">
+              <div class="download-card__price">
+                <span class="price-free">FREE</span>
+                <span class="price-sub">No sign-up required</span>
+              </div>
+
+              <!--
+                FEATURE 5: This button triggers a toast notification.
+                id="downloadBtn" is targeted by main.js.
+                btn--full makes it fill the full sidebar width.
+              -->
+              <button id="downloadBtn" class="btn btn--download btn--lg btn--full">
+                ⬇ Download Free
+              </button>
+
+              <p class="download-card__note">
+                Free for personal and commercial use.<br />
+                Licensed under CC0.
+              </p>
+
+              <div class="download-card__features">
+                <div class="download-card__feature">Instant download</div>
+                <div class="download-card__feature">No account needed</div>
+                <div class="download-card__feature">Commercial use allowed</div>
+                <div class="download-card__feature">Free forever</div>
+              </div>
+            </div>
+
+            <div class="sidebar-extra">
+              <h4>About this asset</h4>
+              <p>All assets are tested by our team before publishing. Found an issue? Use the feedback link below.</p>
+            </div>
+
+          </aside>
+
+        </div>
+        <!-- end .download-layout -->
+
+
+        <!--
+          FEATURE 2: RELATED ASSETS SECTION
+          ============================================
+          This whole section is hidden by default (CSS: display:none).
+          main.js calls getRelatedAssets(category, id, 3) from data.js,
+          then:
+          - If 1 or more results: sets display:block + renders cards
+          - If 0 results: leaves it hidden
+
+          The .resource-grid here reuses the EXACT same card component
+          defined in global.css — no new card styles needed.
+        -->
+        <section class="related-section" id="relatedSection">
+          <div class="section-header">
+            <h2 class="section-title">More Like This</h2>
+            <p class="section-sub">From the same category</p>
+          </div>
+
+          <!-- Cards injected here by main.js → renderResourceCards() -->
+          <div class="resource-grid" id="relatedGrid"></div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="../index.html" class="nav__logo">Nexus<span>Assets</span></a>
+        <p>Free creative resources for artists, designers, and 3D enthusiasts.</p>
+      </div>
+      <div class="footer__links">
+        <h4>Browse</h4>
+        <ul>
+          <li><a href="resources.html?category=blender">Blender</a></li>
+          <li><a href="resources.html?category=vfx">VFX</a></li>
+          <li><a href="resources.html?category=models">3D Models</a></li>
+          <li><a href="resources.html?category=textures">Textures</a></li>
+        </ul>
+      </div>
+      <div class="footer__links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom container">
+      <p>© 2025 NexusAssets. Built for creators.</p>
+    </div>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

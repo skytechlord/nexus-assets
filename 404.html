@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found — NexusAssets</title>
+
+  <!--
+    SEO NOTE: We don't want search engines indexing the 404 page
+    as if it were real content. This meta tag tells them not to.
+  -->
+  <meta name="robots" content="noindex, follow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+
+  <!--
+    PATH NOTE: This file lives at the project ROOT (same folder as
+    index.html), NOT inside /pages/. That's intentional — hosting
+    platforms like Netlify, Vercel, and GitHub Pages automatically
+    look for a file called exactly "404.html" in the root folder
+    and serve it whenever someone hits a broken link. If we put it
+    inside /pages/, most platforms wouldn't find it automatically.
+
+    Because it's at the root, our CSS/JS paths below do NOT use
+    "../" — they're written exactly like they are in index.html.
+  -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/error.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+    NAVIGATION
+    Identical structure to every other page. Paths are root-relative
+    since this file sits next to index.html.
+  ============================================================ -->
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="nav__logo">Nexus<span>Assets</span></a>
+      <ul class="nav__links">
+        <li><a href="index.html" class="nav__link">Home</a></li>
+        <li><a href="pages/resources.html" class="nav__link">Browse</a></li>
+        <li><a href="pages/about.html" class="nav__link">About</a></li>
+        <li><a href="pages/contact.html" class="nav__link">Contact</a></li>
+      </ul>
+      <a href="pages/resources.html" class="btn btn--primary">Browse Free Assets</a>
+      <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="pages/resources.html">Browse</a></li>
+      <li><a href="pages/about.html">About</a></li>
+      <li><a href="pages/contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- ============================================================
+    MAIN 404 CONTENT
+    A single full-screen centered section — no sidebar, no grid.
+    Keeping a 404 page simple and fast is good UX: the visitor
+    is already a little lost, so we don't want to overwhelm them.
+  ============================================================ -->
+  <main>
+    <section class="error-page">
+
+      <!-- Decorative glow blobs, same technique as other hero sections -->
+      <div class="error-page__glow error-page__glow--1" aria-hidden="true"></div>
+      <div class="error-page__glow error-page__glow--2" aria-hidden="true"></div>
+
+      <div class="error-page__inner">
+
+        <!-- The big "404" number with gradient + floating animation -->
+        <div class="error-code">404</div>
+
+        <h1 class="error-title">This asset doesn't exist... yet</h1>
+
+        <p class="error-message">
+          The page you're looking for might have been moved, renamed,
+          or maybe it never existed at all. Let's get you back to
+          something real.
+        </p>
+
+        <!-- Primary action buttons -->
+        <div class="error-actions">
+          <a href="index.html" class="btn btn--primary btn--lg">
+            ← Back to Homepage
+          </a>
+          <a href="pages/resources.html" class="btn btn--ghost btn--lg">
+            Browse All Assets
+          </a>
+        </div>
+
+        <!-- Quick links to help lost visitors find their way -->
+        <div class="error-suggestions">
+          <p class="error-suggestions__label">Or try one of these</p>
+          <div class="error-suggestions__links">
+            <a href="pages/resources.html?category=blender">🎨 Blender</a>
+            <a href="pages/resources.html?category=vfx">✨ VFX</a>
+            <a href="pages/resources.html?category=models">🧊 3D Models</a>
+            <a href="pages/about.html">About Us</a>
+            <a href="pages/contact.html">Contact</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================
+    FOOTER
+    Same as every other page on the site.
+  ============================================================ -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="index.html" class="nav__logo">Nexus<span>Assets</span></a>
+        <p>Free creative resources for artists, designers, and 3D enthusiasts.</p>
+      </div>
+      <div class="footer__links">
+        <h4>Browse</h4>
+        <ul>
+          <li><a href="pages/resources.html?category=blender">Blender</a></li>
+          <li><a href="pages/resources.html?category=vfx">VFX</a></li>
+          <li><a href="pages/resources.html?category=models">3D Models</a></li>
+          <li><a href="pages/resources.html?category=textures">Textures</a></li>
+        </ul>
+      </div>
+      <div class="footer__links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="pages/about.html">About Us</a></li>
+          <li><a href="pages/contact.html">Contact</a></li>
+          <li><a href="pages/privacy.html">Privacy Policy</a></li>
+          <li><a href="pages/terms.html">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom container">
+      <p>© 2025 NexusAssets. Built for creators.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — NexusAssets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+</head>
+<body>
+
+  <!-- ── Navigation ───────────────────────────────────────────── -->
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="../index.html" class="nav__logo">Nexus<span>Assets</span></a>
+      <ul class="nav__links">
+        <li><a href="../index.html" class="nav__link">Home</a></li>
+        <li><a href="resources.html" class="nav__link">Browse</a></li>
+        <li><a href="../index.html#categories" class="nav__link">Categories</a></li>
+        <li><a href="about.html" class="nav__link active">About</a></li>
+      </ul>
+      <a href="resources.html" class="btn btn--primary">Browse Free Assets</a>
+      <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="resources.html">Browse</a></li>
+      <li><a href="../index.html#categories">Categories</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <main>
+
+    <!-- ── Page hero ─────────────────────────────────────────── -->
+    <section class="page-hero">
+      <div class="page-hero__glow" aria-hidden="true"></div>
+      <div class="container page-hero__inner">
+        <span class="page-hero__label">Who we are</span>
+        <h1 class="page-hero__title">Built by Creators,<br /><em>For Creators</em></h1>
+        <p class="page-hero__sub">
+          NexusAssets was born out of frustration with paywalled resources
+          and scattered asset libraries. We believe great tools should be
+          accessible to everyone — beginner or pro.
+        </p>
+      </div>
+    </section>
+
+    <div class="page-body">
+      <div class="container">
+
+        <!-- Breadcrumb navigation -->
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span class="breadcrumb__sep">›</span>
+          <span class="breadcrumb__current">About</span>
+        </nav>
+
+        <!-- ── Stats row ─────────────────────────────────────── -->
+        <!--
+          These numbers build trust at a glance.
+          In Phase 3, you'd pull these from a real database.
+        -->
+        <div class="stats-row">
+          <div class="stat-block">
+            <span class="stat-block__number">200+</span>
+            <span class="stat-block__label">Free Assets</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-block__number">12k+</span>
+            <span class="stat-block__label">Downloads</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-block__number">5</span>
+            <span class="stat-block__label">Categories</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-block__number">2025</span>
+            <span class="stat-block__label">Founded</span>
+          </div>
+        </div>
+
+        <!-- ── Our story ─────────────────────────────────────── -->
+        <div class="prose-section">
+          <h2>Our Story</h2>
+          <p>
+            NexusAssets started as a personal bookmark folder — a collection of
+            free Blender addons, texture packs, and VFX overlays that one
+            developer kept sharing with friends on Discord. Every time someone
+            asked "where do you get your assets?", it took 10 messages to
+            explain. So we built a website.
+          </p>
+          <p>
+            What started as a weekend project quickly grew into a real platform
+            as artists from around the world started contributing assets, sharing
+            the site, and requesting new categories. Today, NexusAssets is home
+            to hundreds of free resources across five categories — with more
+            added every week.
+          </p>
+
+          <div class="prose-callout">
+            <p>
+              💡 <strong>Our mission:</strong> Make professional-grade creative
+              resources accessible to every artist regardless of budget, location,
+              or experience level.
+            </p>
+          </div>
+        </div>
+
+        <!-- ── Our values ────────────────────────────────────── -->
+        <div class="prose-section">
+          <h2>What We Stand For</h2>
+          <div class="info-cards">
+
+            <div class="info-card">
+              <div class="info-card__icon">🔓</div>
+              <h3>Always Free</h3>
+              <p>
+                Core assets will always be free. We may add optional premium
+                packs in the future, but our base library stays open for everyone.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card__icon">✅</div>
+              <h3>Quality First</h3>
+              <p>
+                Every asset is reviewed before publishing. We check that files
+                open correctly, are documented, and actually deliver what they promise.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card__icon">⚖️</div>
+              <h3>Clear Licensing</h3>
+              <p>
+                All assets use CC0 (public domain) or CC-BY licenses. No
+                ambiguous terms — you always know exactly what you can do.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card__icon">🌍</div>
+              <h3>Community Driven</h3>
+              <p>
+                We accept asset submissions from creators worldwide. If you've
+                made something useful, share it here and help the community grow.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── Team section ──────────────────────────────────── -->
+        <!--
+          Team member cards use initials in a gradient avatar circle.
+          No real photos needed — works great with just CSS.
+          When you add a backend, replace the avatar div with a real <img>.
+        -->
+        <div class="prose-section">
+          <h2>The Team</h2>
+          <p>
+            We're a small, fully remote team of artists, developers, and 3D
+            enthusiasts who contribute in our spare time.
+          </p>
+          <div class="team-grid">
+
+            <div class="team-card">
+              <div class="team-card__avatar">KA</div>
+              <h3 class="team-card__name">Kofi Asante</h3>
+              <p class="team-card__role">Founder & Developer</p>
+            </div>
+
+            <div class="team-card">
+              <div class="team-card__avatar">ZM</div>
+              <h3 class="team-card__name">Zara Mills</h3>
+              <p class="team-card__role">3D Artist & Curator</p>
+            </div>
+
+            <div class="team-card">
+              <div class="team-card__avatar">RO</div>
+              <h3 class="team-card__name">Remi Osei</h3>
+              <p class="team-card__role">VFX Specialist</p>
+            </div>
+
+            <div class="team-card">
+              <div class="team-card__avatar">YP</div>
+              <h3 class="team-card__name">Yuki Park</h3>
+              <p class="team-card__role">UI/UX Designer</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── CTA section ───────────────────────────────────── -->
+        <div class="prose-section" style="text-align:center; padding: var(--space-xl) 0;">
+          <h2>Want to Contribute?</h2>
+          <p style="max-width:500px; margin: 0 auto var(--space-xl);">
+            We welcome asset submissions from creators of all skill levels.
+            If you've made something free and useful, share it with the community.
+          </p>
+          <div style="display:flex; gap:var(--space-md); justify-content:center; flex-wrap:wrap;">
+            <a href="contact.html" class="btn btn--primary btn--lg">Submit an Asset</a>
+            <a href="resources.html" class="btn btn--ghost btn--lg">Browse Resources</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="../index.html" class="nav__logo">Nexus<span>Assets</span></a>
+        <p>Free creative resources for artists, designers, and 3D enthusiasts.</p>
+      </div>
+      <div class="footer__links">
+        <h4>Browse</h4>
+        <ul>
+          <li><a href="resources.html?category=blender">Blender</a></li>
+          <li><a href="resources.html?category=vfx">VFX</a></li>
+          <li><a href="resources.html?category=models">3D Models</a></li>
+          <li><a href="resources.html?category=textures">Textures</a></li>
+        </ul>
+      </div>
+      <div class="footer__links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms & Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom container">
+      <p>© 2025 NexusAssets. Built for creators.</p>
+    </div>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

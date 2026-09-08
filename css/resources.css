@@ -1,0 +1,258 @@
+/* ================================================================
+   resources.css — Resources page styles (Phase 2 Upgrade)
+   ================================================================
+   WHAT'S NEW VS PHASE 1:
+   - Search bar styles (Feature 3)
+   - Sort dropdown styles (Feature 4)
+   - Load More button styles (Feature 6)
+   - Toolbar layout wrapping search + sort together
+================================================================ */
+
+/* ── Page header ────────────────────────────────────────────────── */
+.page-header {
+  padding-top: calc(var(--nav-height) + var(--space-2xl));
+  padding-bottom: var(--space-2xl);
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(to bottom, rgba(124,106,245,0.05), transparent);
+}
+
+.page-header h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin-bottom: var(--space-sm);
+}
+
+.page-header p { font-size: 1rem; }
+
+
+/* ── Filter bar ─────────────────────────────────────────────────── */
+.filter-bar {
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: var(--nav-height);
+  background: rgba(10, 10, 15, 0.95);
+  backdrop-filter: blur(16px);
+  z-index: 50;
+}
+
+.filter-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.filter-bar__label {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  margin-right: var(--space-sm);
+}
+
+.filter-btn {
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.filter-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.filter-btn.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+
+/* ================================================================
+   TOOLBAR — Search + Sort row (FEATURE 3 + 4)
+   ================================================================
+   This toolbar sits between the filter bar and the results grid.
+   It uses flexbox to put the search input on the left and the
+   sort dropdown on the right.
+================================================================ */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl) 0 var(--space-lg);
+  flex-wrap: wrap;
+}
+
+/* ── FEATURE 3: Search input ──────────────────────────────────── */
+.search-wrap {
+  /* flex: 1 means "grow to fill available space" */
+  flex: 1;
+  position: relative;
+  min-width: 200px;
+}
+
+/* Magnifying glass icon inside the input */
+.search-wrap::before {
+  content: '🔍';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  pointer-events: none;   /* Click passes through to the input */
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.65rem 1rem 0.65rem 2.8rem;  /* Left padding makes room for icon */
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Glow on focus — same feel as the card hover */
+.search-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(124,106,245,0.15);
+}
+
+/* ── FEATURE 4: Sort dropdown ──────────────────────────────────── */
+.sort-wrap {
+  position: relative;
+  flex-shrink: 0;   /* Never shrink below its natural size */
+}
+
+/* Custom dropdown arrow using CSS — replaces the ugly browser default */
+.sort-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  font-size: 0.8rem;
+}
+
+.sort-select {
+  appearance: none;           /* Remove browser default dropdown arrow */
+  -webkit-appearance: none;
+  padding: 0.65rem 2.5rem 0.65rem 1rem;  /* Right padding for our arrow */
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--transition);
+  /* Dropdown options inherit background from here */
+  background-image: none;
+}
+
+.sort-select:focus,
+.sort-select:hover {
+  border-color: var(--color-accent);
+}
+
+/* Style the dropdown options (limited browser support, but still helpful) */
+.sort-select option {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+
+/* ── Results info ───────────────────────────────────────────────── */
+.results-info {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
+}
+
+.results-info span {
+  color: var(--color-white);
+  font-weight: 600;
+}
+
+
+/* ── Empty state ────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: var(--space-3xl) var(--space-lg);
+  color: var(--color-text-muted);
+  display: none;
+}
+
+.empty-state.visible { display: block; }
+
+.empty-state__icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+}
+
+.empty-state h3 {
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+
+/* ================================================================
+   LOAD MORE BUTTON (FEATURE 6)
+   ================================================================
+   Centered below the grid. Shown/hidden by JavaScript based on
+   whether there are more results to show.
+================================================================ */
+.load-more-wrap {
+  text-align: center;
+  margin-top: var(--space-2xl);
+}
+
+/* The button itself reuses .btn and .btn--outline from global.css */
+#loadMoreBtn {
+  display: none;   /* Hidden initially — JS shows it when needed */
+  min-width: 200px;
+}
+
+
+/* ── Resources section ──────────────────────────────────────────── */
+.resources-section {
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-3xl);
+}
+
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  /* Stack search and sort vertically on mobile */
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-wrap { min-width: unset; }
+
+  .sort-wrap { width: 100%; }
+  .sort-select { width: 100%; }
+
+  .filter-btn {
+    font-size: 0.78rem;
+    padding: 0.35rem 0.8rem;
+  }
+}
