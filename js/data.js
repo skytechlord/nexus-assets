@@ -12,7 +12,7 @@
    e.g. downloadUrl: "https://your-cdn.com/assets/node-wrangler.zip"
 ================================================================ */
 
-const SAMPLE_ZIP = "https://github.com/nicholasstephan/nicholasstephan/archive/refs/heads/main.zip";
+const SAMPLE_ZIP = "https://github.com/skytechlord/nexus-assets/releases/download/v1.0.0/NexusAssets-Test.zip";
 
 const ASSETS = [
   {
@@ -194,6 +194,24 @@ const ASSETS = [
     version: "1.2.0", blenderVersion: null,
     downloads: 4100, featured: true, dateAdded: "2025-05-01",
     downloadUrl: SAMPLE_ZIP
+  },
+  {
+    id: 16,
+    title: "Wooden Plank Generator",
+    category: "blender",
+    categoryLabel: "Blender",
+    description: "A Blender add-on for generating customizable wooden plank geometry.",
+    tags: ["addon", "blender", "wood", "procedural"],
+    image: "https://images.unsplash.com/photo-1541971875076-8f970d573be6?w=600&q=80",
+    emoji: "🪵",
+    fileSize: "3.1 KB",
+    fileFormat: "ZIP (.py addon)",
+    version: "1.0.0",
+    blenderVersion: "Blender",
+    downloads: 0,
+    featured: false,
+    dateAdded: "2026-09-14",
+    downloadUrl: "https://github.com/skytechlord/nexus-assets/releases/download/v1.0.0/Wooden-Plank-Generator.zip"
   }
 ];
 
