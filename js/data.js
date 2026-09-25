@@ -12,6 +12,18 @@
    e.g. downloadUrl: "https://your-cdn.com/assets/node-wrangler.zip"
 ================================================================ */
 
+/* ================================================================
+   RESOURCE TYPES — controls the entire user experience per asset
+   ================================================================
+   type: "free"     → Download button → triggers GitHub Release ZIP
+   type: "premium"  → "Let's Talk" button → contact-premium.html
+   type: "contact"  → "Request This" button → contact-premium.html
+
+   contactSubject: pre-fills the subject line on the contact page
+   so the visitor doesn't have to type what they're enquiring about.
+   Only needed on premium/contact assets — free assets ignore it.
+================================================================ */
+
 const SAMPLE_ZIP = "https://github.com/skytechlord/nexus-assets/releases/download/v1.0.0/NexusAssets-Test.zip";
 
 const ASSETS = [
@@ -25,6 +37,7 @@ const ASSETS = [
     emoji: "🎨", fileSize: "1.2 MB", fileFormat: "ZIP (.py addon)",
     version: "2.1.0", blenderVersion: "3.6+",
     downloads: 4820, featured: true, dateAdded: "2025-03-10",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -37,6 +50,7 @@ const ASSETS = [
     emoji: "🪨", fileSize: "3.4 MB", fileFormat: "ZIP (.blend file)",
     version: "1.0.0", blenderVersion: "4.0+",
     downloads: 2140, featured: true, dateAdded: "2025-04-01",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -49,6 +63,7 @@ const ASSETS = [
     emoji: "🧵", fileSize: "800 KB", fileFormat: "ZIP (.blend file)",
     version: "1.3.0", blenderVersion: "3.4+",
     downloads: 1560, featured: false, dateAdded: "2025-02-14",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -61,6 +76,7 @@ const ASSETS = [
     emoji: "✨", fileSize: "480 MB", fileFormat: "ZIP (MOV files)",
     version: "1.0.0", blenderVersion: null,
     downloads: 6300, featured: true, dateAdded: "2025-01-20",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -73,6 +89,7 @@ const ASSETS = [
     emoji: "💡", fileSize: "210 MB", fileFormat: "ZIP (MOV files)",
     version: "1.0.0", blenderVersion: null,
     downloads: 3910, featured: false, dateAdded: "2025-03-05",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -85,6 +102,7 @@ const ASSETS = [
     emoji: "📺", fileSize: "150 MB", fileFormat: "ZIP (MOV files)",
     version: "1.0.0", blenderVersion: null,
     downloads: 5120, featured: true, dateAdded: "2025-04-15",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -97,6 +115,7 @@ const ASSETS = [
     emoji: "🧊", fileSize: "28 MB", fileFormat: "ZIP (FBX + OBJ + textures)",
     version: "1.0.0", blenderVersion: null,
     downloads: 3250, featured: true, dateAdded: "2025-02-28",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -109,6 +128,7 @@ const ASSETS = [
     emoji: "🌲", fileSize: "12 MB", fileFormat: "ZIP (FBX + textures)",
     version: "1.1.0", blenderVersion: null,
     downloads: 4700, featured: false, dateAdded: "2025-01-08",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -121,6 +141,7 @@ const ASSETS = [
     emoji: "🪑", fileSize: "45 MB", fileFormat: "ZIP (FBX + OBJ + textures)",
     version: "1.0.0", blenderVersion: null,
     downloads: 1980, featured: false, dateAdded: "2025-03-22",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -133,6 +154,7 @@ const ASSETS = [
     emoji: "🖼", fileSize: "320 MB", fileFormat: "ZIP (PNG files)",
     version: "1.0.0", blenderVersion: null,
     downloads: 7400, featured: true, dateAdded: "2025-01-15",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -145,6 +167,7 @@ const ASSETS = [
     emoji: "🔩", fileSize: "240 MB", fileFormat: "ZIP (PNG files)",
     version: "1.0.0", blenderVersion: null,
     downloads: 5600, featured: false, dateAdded: "2025-02-02",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -157,6 +180,7 @@ const ASSETS = [
     emoji: "💫", fileSize: "180 MB", fileFormat: "ZIP (EXR files)",
     version: "1.0.0", blenderVersion: null,
     downloads: 8100, featured: true, dateAdded: "2025-04-10",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -169,6 +193,7 @@ const ASSETS = [
     emoji: "📐", fileSize: "22 MB", fileFormat: "ZIP (AEP file)",
     version: "1.0.0", blenderVersion: null,
     downloads: 3300, featured: true, dateAdded: "2025-03-18",
+    type: "free",
     downloadUrl: SAMPLE_ZIP
   },
   {
@@ -181,7 +206,8 @@ const ASSETS = [
     emoji: "📱", fileSize: "8 MB", fileFormat: "ZIP (.fig file)",
     version: "2.0.0", blenderVersion: null,
     downloads: 2850, featured: false, dateAdded: "2025-04-22",
-    downloadUrl: SAMPLE_ZIP
+    type: "premium",
+    contactSubject: "Interested in Social Media UI Kit — Figma"
   },
   {
     id: 15,
@@ -193,25 +219,8 @@ const ASSETS = [
     emoji: "💻", fileSize: "1.5 MB", fileFormat: "ZIP (HTML/CSS/JS)",
     version: "1.2.0", blenderVersion: null,
     downloads: 4100, featured: true, dateAdded: "2025-05-01",
-    downloadUrl: SAMPLE_ZIP
-  },
-  {
-    id: 16,
-    title: "Wooden Plank Generator",
-    category: "blender",
-    categoryLabel: "Blender",
-    description: "A Blender add-on for generating customizable wooden plank geometry.",
-    tags: ["addon", "blender", "wood", "procedural"],
-    image: "https://images.unsplash.com/photo-1541971875076-8f970d573be6?w=600&q=80",
-    emoji: "🪵",
-    fileSize: "3.1 KB",
-    fileFormat: "ZIP (.py addon)",
-    version: "1.0.0",
-    blenderVersion: "Blender",
-    downloads: 0,
-    featured: false,
-    dateAdded: "2026-09-14",
-    downloadUrl: "https://github.com/skytechlord/nexus-assets/releases/download/v1.0.0/Wooden-Plank-Generator.zip"
+    type: "premium",
+    contactSubject: "Interested in Brutalist Portfolio — HTML Template"
   }
 ];
 

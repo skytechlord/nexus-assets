@@ -494,6 +494,18 @@ em {
   padding: 3px 8px;
 }
 
+/* Premium badge — shown on cards where type = "premium" */
+.badge--premium {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-accent-2);
+  background: rgba(245,166,35,0.12);
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+}
+
 
 /* ================================================================
    10. TOAST NOTIFICATION SYSTEM  (NEW — Feature 5)

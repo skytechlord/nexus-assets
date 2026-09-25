@@ -100,8 +100,13 @@ function createResourceCardHTML(asset, basePath = '') {
         <h3 class="resource-card__title">${asset.title}</h3>
         <p class="resource-card__desc">${asset.description}</p>
         <div class="resource-card__footer">
-          <span class="resource-card__meta">⬇ ${formatDownloads(asset.downloads)}</span>
-          <span class="badge--free">Free</span>
+          <span class="resource-card__meta">
+            ${asset.type === 'free' ? `⬇ ${formatDownloads(asset.downloads)}` : '💎 Premium'}
+          </span>
+          ${asset.type === 'free'
+            ? '<span class="badge--free">Free</span>'
+            : '<span class="badge--premium">Let\'s Talk</span>'
+          }
         </div>
       </div>
     </article>
@@ -287,51 +292,77 @@ if (document.getElementById('assetTitle')) {
     setText('assetDescription', 'This asset may have been removed or the link is invalid.');
   }
 
+  // ── Render the correct action panel based on asset type ────
+  // The download.html has three panels — only one is shown at a time.
+  // JS reads asset.type and shows the right one, hides the other two.
+  const freePanel    = document.getElementById('freePanel');
+  const premiumPanel = document.getElementById('premiumPanel');
+
+  if (asset) {
+    if (asset.type === 'premium' || asset.type === 'contact') {
+      // ── PREMIUM / CONTACT: show "Let's Talk" panel ──────────
+      if (freePanel)    freePanel.style.display    = 'none';
+      if (premiumPanel) premiumPanel.style.display = 'block';
+
+      // Pre-fill the contact subject on the "Get in Touch" buttons
+      // by appending ?subject= to the contact-premium.html URL
+      const subject   = asset.contactSubject || asset.title;
+      const assetName = encodeURIComponent(asset.title);
+
+      document.querySelectorAll('.premium-contact-link').forEach(link => {
+        const base = link.getAttribute('data-href');
+        if (!base) return;
+
+        // Build a full URL with all context the contact page needs:
+        // ?id=        → numeric asset id, so the lead record knows which asset
+        // ?type=      → "premium" or "contact", controls page wording
+        // ?asset=     → human-readable asset name, pre-fills the form
+        // ?subject=   → email subject line (same as asset name or contactSubject)
+        const qs = new URLSearchParams({
+          id:      assetId,
+          type:    asset.type,
+          asset:   asset.title,
+          subject: subject
+        }).toString();
+
+        link.href = `${base}?${qs}`;
+      });
+
+    } else {
+      // ── FREE: show standard download panel ──────────────────
+      if (premiumPanel) premiumPanel.style.display = 'none';
+      if (freePanel)    freePanel.style.display    = 'block';
+    }
+  }
+
+  // ── Free download button ─────────────────────────────────────
   const downloadBtn = document.getElementById('downloadBtn');
   if (downloadBtn) {
     downloadBtn.addEventListener('click', function () {
-
-      // ── Check the asset has a real download URL ─────────────
-      // If asset wasn't found above, or has no downloadUrl, warn the user
       if (!asset || !asset.downloadUrl) {
         showToast('Download link not available yet.', 'info', 3000);
         return;
       }
 
-      // ── Trigger the actual file download ────────────────────
-      // HOW THIS WORKS:
-      // We create a hidden <a> element in memory, set its href to the
-      // file URL, set download="" so the browser saves it instead of
-      // opening it, then programmatically click it and remove it.
-      // This is the standard, library-free way to trigger a download.
-      const link    = document.createElement('a');
-      link.href     = asset.downloadUrl;
-
-      // The `download` attribute suggests a filename to the browser.
-      // We build it from the asset title, lowercased with spaces as dashes.
-      // e.g. "Node Wrangler Pro" → "node-wrangler-pro.zip"
+      // Create a hidden <a> and programmatically click it —
+      // the standard library-free way to trigger a file download.
+      const link     = document.createElement('a');
+      link.href      = asset.downloadUrl;
       const safeName = asset.title
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')   // replace non-alphanumeric with dash
-        .replace(/^-|-$/g, '');          // trim leading/trailing dashes
-      link.download = safeName + '.zip';
-
-      // For cross-origin URLs (files hosted elsewhere), `download`
-      // attribute may be ignored by the browser for security reasons —
-      // the file will still open/download, just without the custom name.
-      // When you host your own files, the filename will work correctly.
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      link.download      = safeName + '.zip';
       link.style.display = 'none';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      // ── Visual feedback ──────────────────────────────────────
-      const original = this.innerHTML;
-      this.innerHTML = '✓ Download Started!';
-      this.disabled  = true;
-      this.style.cssText = 'background:#4ade80; border-color:#4ade80; color:#0a1a0a;';
+      const original     = this.innerHTML;
+      this.innerHTML     = '✓ Download Started!';
+      this.disabled      = true;
+      this.style.cssText = 'background:#4ade80;border-color:#4ade80;color:#0a1a0a;';
       showToast('Your download has started!', 'success', 3500);
-
       setTimeout(() => {
         this.innerHTML     = original;
         this.disabled      = false;

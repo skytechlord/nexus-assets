@@ -63,7 +63,6 @@
           <span class="breadcrumb__current">Contact</span>
         </nav>
 
-        <!-- ── Two-column layout: form left, info right ──────── -->
         <div class="page-layout">
 
           <!-- ── LEFT: Contact form ─────────────────────────── -->
@@ -72,70 +71,37 @@
             <h2>Send a Message</h2>
             <p class="form-sub">All fields marked with * are required.</p>
 
-            <!--
-              WHY NO <form> TAG?
-              We're using a <div> instead of <form> because we have
-              no backend to handle form submissions yet.
-              JavaScript intercepts the button click, validates the
-              fields, and shows a success message instead.
-
-              In Phase 3 you'll replace this with a real <form> that
-              POSTs to your server, or use a service like Formspree.
-            -->
             <div id="contactFormFields">
 
-              <!-- Name row: two fields side by side -->
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label" for="firstName">
                     First Name <span class="required">*</span>
                   </label>
-                  <input
-                    type="text"
-                    id="firstName"
-                    class="form-input"
-                    placeholder="Your first name"
-                    autocomplete="given-name"
-                  />
+                  <input type="text" id="firstName" class="form-input"
+                    placeholder="Your first name" autocomplete="given-name" />
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="lastName">
                     Last Name <span class="required">*</span>
                   </label>
-                  <input
-                    type="text"
-                    id="lastName"
-                    class="form-input"
-                    placeholder="Your last name"
-                    autocomplete="family-name"
-                  />
+                  <input type="text" id="lastName" class="form-input"
+                    placeholder="Your last name" autocomplete="family-name" />
                 </div>
               </div>
 
-              <!-- Email -->
               <div class="form-group">
                 <label class="form-label" for="email">
                   Email Address <span class="required">*</span>
                 </label>
-                <input
-                  type="email"
-                  id="email"
-                  class="form-input"
-                  placeholder="you@example.com"
-                  autocomplete="email"
-                />
+                <input type="email" id="email" class="form-input"
+                  placeholder="your email" autocomplete="email" />
               </div>
 
-              <!-- Subject dropdown -->
               <div class="form-group">
                 <label class="form-label" for="subject">
                   What's this about? <span class="required">*</span>
                 </label>
-                <!--
-                  The <select> options give users clear categories.
-                  In Phase 3, these values get sent to your backend
-                  so you can route messages to the right team member.
-                -->
                 <select id="subject" class="form-select">
                   <option value="" disabled selected>Select a topic...</option>
                   <option value="asset-submission">Submit an Asset</option>
@@ -147,31 +113,32 @@
                 </select>
               </div>
 
-              <!-- Message -->
               <div class="form-group">
                 <label class="form-label" for="message">
                   Message <span class="required">*</span>
                 </label>
-                <textarea
-                  id="message"
-                  class="form-textarea"
-                  placeholder="Tell us what's on your mind..."
-                ></textarea>
+                <textarea id="message" class="form-textarea"
+                  placeholder="Tell us what's on your mind..."></textarea>
               </div>
 
-              <!-- Submit row -->
+              <!-- Error block — hidden unless submission fails -->
+              <div id="contactError" style="display:none;
+                background:rgba(248,113,113,0.08);
+                border:1px solid rgba(248,113,113,0.3);
+                border-radius:8px;
+                padding:0.75rem 1rem;
+                margin-bottom:1rem;
+                font-size:0.88rem;
+                color:#f87171;
+                line-height:1.5;">
+                <span id="contactErrorText">Something went wrong. Please try again.</span>
+              </div>
+
               <div class="form-actions">
-                <!--
-                  id="submitBtn" is targeted by the JS below.
-                  We use a <button> not an <input type="submit">
-                  because we're handling submission manually.
-                -->
                 <button id="submitBtn" class="btn btn--primary btn--lg">
                   Send Message
                 </button>
-                <span class="form-note">
-                  We usually reply within 48 hours.
-                </span>
+                <span class="form-note">We usually reply within 48 hours.</span>
               </div>
 
             </div>
@@ -179,8 +146,11 @@
 
             <!--
               SUCCESS STATE
-              Hidden by default. JavaScript shows this and hides
-              #contactFormFields after a successful "submission".
+              NOTE: No "visible" class here — it is hidden by default
+              via CSS (.form-success { display:none }).
+              JS adds the "visible" class only after Supabase confirms
+              the insert succeeded. This was the root cause of the bug
+              where the success state showed immediately on page load.
             -->
             <div class="form-success" id="formSuccess">
               <div class="form-success__icon">✅</div>
@@ -198,7 +168,7 @@
               <div class="contact-item__icon">📧</div>
               <div>
                 <div class="contact-item__label">Email</div>
-                <div class="contact-item__value">hello@nexusassets.io</div>
+                <div class="contact-item__value">skylurd001@gmail.com</div>
                 <div class="contact-item__note">For general enquiries</div>
               </div>
             </div>
@@ -230,7 +200,6 @@
               </div>
             </div>
 
-            <!-- Quick links card -->
             <div class="info-card">
               <h3>Quick Links</h3>
               <ul style="margin-top:var(--space-md); display:flex; flex-direction:column; gap:var(--space-sm);">
@@ -241,7 +210,7 @@
                   <a href="privacy.html" class="prose-link">→ Privacy Policy</a>
                 </li>
                 <li style="list-style:none;">
-                  <a href="terms.html" class="prose-link">→ Terms & Conditions</a>
+                  <a href="terms.html" class="prose-link">→ Terms &amp; Conditions</a>
                 </li>
               </ul>
             </div>
@@ -249,7 +218,6 @@
           </aside>
 
         </div>
-        <!-- end .page-layout -->
 
       </div>
     </div>
@@ -278,7 +246,7 @@
           <li><a href="about.html">About Us</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="terms.html">Terms & Conditions</a></li>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
         </ul>
       </div>
     </div>
@@ -287,107 +255,138 @@
     </div>
   </footer>
 
+  <!--
+    Script load order:
+    1. data.js            — ASSETS array (needed by main.js)
+    2. supabase-client.js — supabaseInsert()
+    3. leads.js           — submitLead()
+    4. main.js            — nav, toast, hamburger
+    5. inline script      — this page's form logic
+  -->
   <script src="../js/data.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/leads.js"></script>
   <script src="../js/main.js"></script>
 
-  <!--
-    CONTACT FORM JAVASCRIPT
-    ================================================================
-    Inline here because this logic is only needed on this one page.
-    It would be messy to put it in main.js which runs everywhere.
-
-    What it does:
-    1. Reads all field values when Submit is clicked
-    2. Validates that required fields aren't empty
-    3. Highlights empty fields with a red border
-    4. If valid: hides the form, shows the success message + toast
-  -->
   <script>
+  (function () {
+
     const submitBtn = document.getElementById('submitBtn');
+    if (!submitBtn) return;
 
-    if (submitBtn) {
-      submitBtn.addEventListener('click', function () {
-
-        // Grab values from each field
-        const firstName = document.getElementById('firstName').value.trim();
-        const lastName  = document.getElementById('lastName').value.trim();
-        const email     = document.getElementById('email').value.trim();
-        const subject   = document.getElementById('subject').value;
-        const message   = document.getElementById('message').value.trim();
-
-        // Build a list of fields to validate
-        // Each object has the element and its value
-        const fields = [
-          { el: document.getElementById('firstName'), val: firstName },
-          { el: document.getElementById('lastName'),  val: lastName  },
-          { el: document.getElementById('email'),     val: email     },
-          { el: document.getElementById('subject'),   val: subject   },
-          { el: document.getElementById('message'),   val: message   },
-        ];
-
-        // Check for empty fields
-        let isValid = true;
-
-        fields.forEach(({ el, val }) => {
-          if (!val) {
-            // Highlight the empty field with a red border
-            el.style.borderColor = 'var(--color-error)';
-            el.style.boxShadow   = '0 0 0 3px rgba(248,113,113,0.15)';
-            isValid = false;
-          } else {
-            // Clear error styling on fields that are filled in
-            el.style.borderColor = '';
-            el.style.boxShadow   = '';
-          }
-        });
-
-        if (!isValid) {
-          // Show an error toast and stop here
-          showToast('Please fill in all required fields.', 'error', 3000);
-          return;
-        }
-
-        // Basic email format check using a regular expression (regex)
-        // The pattern /^[^\s@]+@[^\s@]+\.[^\s@]+$/ matches "x@y.z" format
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
-          const emailEl = document.getElementById('email');
-          emailEl.style.borderColor = 'var(--color-error)';
-          emailEl.style.boxShadow   = '0 0 0 3px rgba(248,113,113,0.15)';
-          showToast('Please enter a valid email address.', 'error', 3000);
-          return;
-        }
-
-        // ── All valid: simulate submission ───────────────────
-        // Change button to a loading state while "submitting"
-        submitBtn.textContent = 'Sending...';
-        submitBtn.disabled    = true;
-
-        // Simulate a network delay (like a real API call)
-        // In Phase 3, replace this with: fetch('/api/contact', { method:'POST', body:... })
-        setTimeout(() => {
-          // Hide the form fields
-          document.getElementById('contactFormFields').style.display = 'none';
-          // Show the success message
-          document.getElementById('formSuccess').classList.add('visible');
-          // Show a toast too
-          showToast('Message sent successfully!', 'success', 4000);
-        }, 1200);
-
-      });
-
-      // ── Clear error styling when user starts typing ──────────
-      // This gives instant feedback that they've fixed the problem
-      ['firstName', 'lastName', 'email', 'subject', 'message'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.addEventListener('input', function () {
-            this.style.borderColor = '';
-            this.style.boxShadow   = '';
-          });
-        }
-      });
+    // ── Helpers ────────────────────────────────────────────────
+    function showFieldError(el, show) {
+      if (!el) return;
+      el.style.borderColor = show ? 'var(--color-error, #f87171)' : '';
+      el.style.boxShadow   = show ? '0 0 0 3px rgba(248,113,113,0.15)' : '';
     }
+
+    function showFormError(message) {
+      const block = document.getElementById('contactError');
+      const text  = document.getElementById('contactErrorText');
+      if (text)  text.textContent = message;
+      if (block) block.style.display = 'block';
+    }
+
+    function hideFormError() {
+      const block = document.getElementById('contactError');
+      if (block) block.style.display = 'none';
+    }
+
+    function setButtonState(state) {
+      if (state === 'loading') {
+        submitBtn.textContent = 'Sending…';
+        submitBtn.disabled    = true;
+        submitBtn.style.opacity = '0.7';
+      } else if (state === 'done') {
+        submitBtn.textContent = '✓ Sent!';
+        submitBtn.disabled    = true;
+      } else {
+        submitBtn.textContent = 'Send Message';
+        submitBtn.disabled    = false;
+        submitBtn.style.opacity = '';
+      }
+    }
+
+    // ── Clear errors as user types ─────────────────────────────
+    ['firstName','lastName','email','subject','message'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', function () {
+          showFieldError(this, false);
+          hideFormError();
+        });
+      }
+    });
+
+    // ── Submit ─────────────────────────────────────────────────
+    submitBtn.addEventListener('click', async function () {
+
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName  = document.getElementById('lastName').value.trim();
+      const email     = document.getElementById('email').value.trim();
+      const subject   = document.getElementById('subject').value;
+      const message   = document.getElementById('message').value.trim();
+
+      // Reset all error states
+      hideFormError();
+      ['firstName','lastName','email','subject','message'].forEach(id => {
+        showFieldError(document.getElementById(id), false);
+      });
+
+      // Validate required fields
+      let valid = true;
+      if (!firstName) { showFieldError(document.getElementById('firstName'), true); valid = false; }
+      if (!lastName)  { showFieldError(document.getElementById('lastName'),  true); valid = false; }
+      if (!email)     { showFieldError(document.getElementById('email'),     true); valid = false; }
+      if (!subject)   { showFieldError(document.getElementById('subject'),   true); valid = false; }
+      if (!message)   { showFieldError(document.getElementById('message'),   true); valid = false; }
+
+      if (!valid) {
+        showFormError('Please fill in all required fields.');
+        showToast('Please fill in all required fields.', 'error', 3000);
+        return;
+      }
+
+      // Email format check
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showFieldError(document.getElementById('email'), true);
+        showFormError('Please enter a valid email address.');
+        return;
+      }
+
+      // ── Submit to Supabase via leads.js ──────────────────────
+      setButtonState('loading');
+
+      const result = await submitLead({
+        first_name:        firstName,
+        last_name:         lastName,
+        email:             email,
+        whatsapp:          '',
+        telegram:          '',
+        resource_id:       null,
+        resource_title:    subject,   // store the topic as the resource title
+        resource_type:     'general', // distinguishes general contact from premium leads
+        message:           message,
+        marketing_consent: false      // general contact page has no consent checkbox
+      });
+
+      if (result.success) {
+        setButtonState('done');
+        document.getElementById('contactFormFields').style.display = 'none';
+        // Add "visible" class — this is what makes the success panel appear
+        document.getElementById('formSuccess').classList.add('visible');
+        showToast('Message sent successfully!', 'success', 4000);
+
+      } else {
+        setButtonState('idle');
+        showFormError(result.error || 'Something went wrong. Please try again or email us directly.');
+        showToast('Submission failed. Please try again.', 'error', 4000);
+      }
+
+    });
+
+  })();
   </script>
 
 </body>

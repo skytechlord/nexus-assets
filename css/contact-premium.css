@@ -1,0 +1,332 @@
+/* ================================================================
+   contact-premium.css
+   ================================================================
+   Styles for two things:
+   1. The premium card inside download.html (#premiumPanel)
+   2. The contact-premium.html page layout and channel buttons
+================================================================ */
+
+
+/* ================================================================
+   1. PREMIUM CARD — inside download.html sidebar
+   ================================================================
+   Shown by JS when asset.type === "premium" or "contact".
+   Replaces the free download card visually.
+================================================================ */
+.premium-card {
+  background: linear-gradient(135deg,
+    var(--color-surface),
+    rgba(245,166,35,0.06));
+  border: 1px solid rgba(245,166,35,0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-lg);
+}
+
+.premium-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.premium-card__icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.premium-card__title {
+  font-size: 1rem;
+  color: var(--color-white);
+  margin-bottom: 3px;
+}
+
+.premium-card__sub {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.premium-card__desc {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--space-lg);
+}
+
+/* ── Contact channel buttons inside the sidebar card ─────────── */
+.premium-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  text-decoration: none;
+  margin-bottom: var(--space-sm);
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.premium-btn:last-of-type {
+  margin-bottom: var(--space-lg);
+}
+
+.premium-btn:hover {
+  transform: translateX(4px);
+  border-color: var(--color-accent);
+}
+
+.premium-btn__icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  width: 32px;
+  text-align: center;
+}
+
+.premium-btn span strong {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--color-white);
+  margin-bottom: 2px;
+}
+
+.premium-btn span small {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* Colour accent on left border for each channel */
+.premium-btn--whatsapp:hover { border-color: #25d366; }
+.premium-btn--telegram:hover { border-color: #2aabee; }
+.premium-btn--email:hover    { border-color: var(--color-accent); }
+.premium-btn--form:hover     { border-color: var(--color-accent-2); }
+
+.premium-card__note {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+}
+
+
+/* ================================================================
+   2. CONTACT-PREMIUM PAGE — full page layout
+================================================================ */
+
+/* Two-column: channels left, form right */
+.cp-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+/* ── Left column: channel buttons ─────────────────────────────── */
+.cp-channels__title {
+  font-size: 1.3rem;
+  margin-bottom: var(--space-sm);
+}
+
+.cp-channels__sub {
+  font-size: 0.92rem;
+  margin-bottom: var(--space-xl);
+  line-height: 1.6;
+}
+
+/* Large channel button for the full page */
+.cp-channel-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-lg) var(--space-xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  text-decoration: none;
+  margin-bottom: var(--space-md);
+  transition: all var(--transition);
+}
+
+.cp-channel-btn:hover {
+  transform: translateX(6px);
+  box-shadow: var(--shadow-hover);
+}
+
+.cp-channel-btn--whatsapp:hover { border-color: #25d366; background: rgba(37,211,102,0.05); }
+.cp-channel-btn--telegram:hover { border-color: #2aabee; background: rgba(42,171,238,0.05); }
+.cp-channel-btn--email:hover    { border-color: var(--color-accent); background: rgba(124,106,245,0.05); }
+
+.cp-channel-btn__icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  width: 44px;
+  text-align: center;
+}
+
+.cp-channel-btn__text {
+  flex: 1;
+}
+
+.cp-channel-btn__text strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--color-white);
+  font-family: var(--font-display);
+  margin-bottom: 3px;
+}
+
+.cp-channel-btn__text span {
+  display: block;
+  font-size: 0.83rem;
+  color: var(--color-text-muted);
+}
+
+.cp-channel-btn__arrow {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: transform var(--transition);
+}
+
+.cp-channel-btn:hover .cp-channel-btn__arrow {
+  transform: translateX(4px);
+  color: var(--color-white);
+}
+
+/* "What to expect" block */
+.cp-expect {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.cp-expect h4 {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.cp-expect ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.cp-expect ul li {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  padding-left: 1.2rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.cp-expect ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--color-success);
+  font-weight: 700;
+}
+
+/* ── Right column: form ───────────────────────────────────────── */
+.cp-form-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+}
+
+.cp-form-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: var(--space-xs);
+}
+
+.cp-form-card__sub {
+  font-size: 0.88rem;
+  margin-bottom: var(--space-xl);
+  color: var(--color-text-muted);
+}
+
+/* Optional field label suffix */
+.form-label__optional {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+/* Consent checkbox row */
+.cp-consent {
+  padding: var(--space-md) 0;
+}
+
+.cp-consent__label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.cp-consent__checkbox {
+  flex-shrink: 0;
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media (max-width: 900px) {
+  .cp-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .cp-form-card {
+    padding: var(--space-lg);
+  }
+
+  .cp-channel-btn {
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .cp-channel-btn__icon {
+    font-size: 1.5rem;
+    width: 32px;
+  }
+}
+
+/* ── Error message block inside the form ─────────────────────── */
+.cp-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  background: rgba(248,113,113,0.08);
+  border: 1px solid rgba(248,113,113,0.3);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+  font-size: 0.88rem;
+  color: #f87171;
+  line-height: 1.5;
+}
+
+.cp-error__icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+}

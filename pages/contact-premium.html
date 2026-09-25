@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get in Touch — NexusAssets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <link rel="stylesheet" href="../css/contact-premium.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="../index.html" class="nav__logo">Nexus<span>Assets</span></a>
+      <ul class="nav__links">
+        <li><a href="../index.html" class="nav__link">Home</a></li>
+        <li><a href="resources.html" class="nav__link">Browse</a></li>
+        <li><a href="blog.html" class="nav__link">Blog</a></li>
+        <li><a href="about.html" class="nav__link">About</a></li>
+      </ul>
+      <a href="resources.html" class="btn btn--primary">Browse Free Assets</a>
+      <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="resources.html">Browse</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <main>
+    <!--
+      The hero label and title change based on resource type:
+      premium → "Premium Resource" / "Let's Talk 💎"
+      contact → "Resource Request"  / "Request This 📋"
+      JS sets these from the ?type= URL param.
+    -->
+    <section class="page-hero">
+      <div class="page-hero__glow" aria-hidden="true"></div>
+      <div class="container page-hero__inner">
+        <span class="page-hero__label" id="heroLabel">Premium Resource</span>
+        <h1 class="page-hero__title" id="heroTitle">Let's Talk 💎</h1>
+        <p class="page-hero__sub" id="heroSub">
+          You're interested in a premium resource. Reach out through
+          any channel below and we'll get back to you quickly.
+        </p>
+      </div>
+    </section>
+
+    <div class="page-body">
+      <div class="container">
+
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span class="breadcrumb__sep">›</span>
+          <a href="resources.html">Browse</a>
+          <span class="breadcrumb__sep">›</span>
+          <span class="breadcrumb__current" id="breadcrumbCurrent">Get in Touch</span>
+        </nav>
+
+        <div class="cp-layout">
+
+          <!-- LEFT: quick contact channels -->
+          <div class="cp-channels">
+
+            <h2 class="cp-channels__title" id="channelsTitle">Choose how to reach us</h2>
+            <p class="cp-channels__sub" id="channelsSub">
+              We're active on all channels. Pick whichever is easiest for you.
+            </p>
+
+            <a href="https://wa.me/2349035738136"
+               class="cp-channel-btn cp-channel-btn--whatsapp"
+               target="_blank" rel="noopener" id="whatsappLink">
+              <div class="cp-channel-btn__icon">📱</div>
+              <div class="cp-channel-btn__text">
+                <strong>WhatsApp</strong>
+                <span>Fastest response — usually within the hour</span>
+              </div>
+              <div class="cp-channel-btn__arrow">→</div>
+            </a>
+
+            <a href="https://t.me/@SkytrevTech"
+               class="cp-channel-btn cp-channel-btn--telegram"
+               target="_blank" rel="noopener" id="telegramLink">
+              <div class="cp-channel-btn__icon">✈️</div>
+              <div class="cp-channel-btn__text">
+                <strong>Telegram</strong>
+                <span>@SkytrevTech</span>
+              </div>
+              <div class="cp-channel-btn__arrow">→</div>
+            </a>
+
+            <a href="mailto:skylurd001@gmail.com"
+               class="cp-channel-btn cp-channel-btn--email" id="emailLink">
+              <div class="cp-channel-btn__icon">📧</div>
+              <div class="cp-channel-btn__text">
+                <strong>Email</strong>
+                <span>skylurd001@gmail.com</span>
+              </div>
+              <div class="cp-channel-btn__arrow">→</div>
+            </a>
+
+            <div class="cp-expect">
+              <h4 id="expectTitle">What happens next?</h4>
+              <ul id="expectList">
+                <li>We'll confirm what's included in the resource</li>
+                <li>We'll share pricing and delivery details</li>
+                <li>No commitment until you're happy</li>
+                <li>We reply within 48 hours on all channels</li>
+              </ul>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: lead capture form -->
+          <div class="cp-form-wrap">
+            <div class="cp-form-card">
+
+              <h3 id="formTitle">Or send us a message</h3>
+              <p class="cp-form-card__sub" id="formSub">
+                Fill in the form and we'll reach out on your preferred channel.
+              </p>
+
+              <!-- Form fields — hidden after successful submit -->
+              <div id="cpFormFields">
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="cpFirstName">
+                      First Name <span class="required">*</span>
+                    </label>
+                    <input type="text" id="cpFirstName" class="form-input"
+                      placeholder="Your first name" autocomplete="given-name" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="cpLastName">
+                      Last Name <span class="required">*</span>
+                    </label>
+                    <input type="text" id="cpLastName" class="form-input"
+                      placeholder="Your last name" autocomplete="family-name" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="cpEmail">
+                    Email Address <span class="required">*</span>
+                  </label>
+                  <input type="email" id="cpEmail" class="form-input"
+                    placeholder="you@example.com" autocomplete="email" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="cpWhatsapp">
+                    WhatsApp Number
+                    <span class="form-label__optional">(optional)</span>
+                  </label>
+                  <input type="tel" id="cpWhatsapp" class="form-input"
+                    placeholder="+1 234 567 8900" autocomplete="tel" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="cpTelegram">
+                    Telegram Username
+                    <span class="form-label__optional">(optional)</span>
+                  </label>
+                  <input type="text" id="cpTelegram" class="form-input"
+                    placeholder="@yourusername" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="cpResource">
+                    Resource You're Interested In <span class="required">*</span>
+                  </label>
+                  <input type="text" id="cpResource" class="form-input"
+                    placeholder="Resource name" readonly />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="cpMessage">
+                    Message <span class="required">*</span>
+                  </label>
+                  <textarea id="cpMessage" class="form-textarea"
+                    placeholder="Tell us what you need..."></textarea>
+                </div>
+
+                <!-- Consent — explicit opt-in only -->
+                <div class="form-group cp-consent">
+                  <label class="cp-consent__label">
+                    <input type="checkbox" id="cpConsent" class="cp-consent__checkbox" />
+                    <span>
+                      I agree to be contacted by NexusAssets regarding this
+                      enquiry and occasional relevant updates.
+                      See our <a href="privacy.html" class="prose-link" target="_blank">Privacy Policy</a>.
+                    </span>
+                  </label>
+                </div>
+
+                <!-- Error message block — hidden unless submission fails -->
+                <div class="cp-error" id="cpError" style="display:none;" role="alert">
+                  <span class="cp-error__icon">⚠️</span>
+                  <span id="cpErrorText">Something went wrong. Please try again.</span>
+                </div>
+
+                <div class="form-actions">
+                  <button id="cpSubmitBtn" class="btn btn--primary btn--lg">
+                    Send Message
+                  </button>
+                  <span class="form-note">We reply within 48 hours.</span>
+                </div>
+
+              </div>
+              <!-- end #cpFormFields -->
+
+              <!-- Success state — JS swaps to this after Supabase confirms -->
+              <div class="form-success" id="cpFormSuccess">
+                <div class="form-success__icon">✅</div>
+                <h3>Message Received!</h3>
+                <p id="successMsg">
+                  Thanks for reaching out. We'll get back to you within
+                  48 hours on your preferred channel.
+                </p>
+                <a href="resources.html" class="btn btn--ghost" style="margin-top:1.5rem;">
+                  Browse More Resources
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="../index.html" class="nav__logo">Nexus<span>Assets</span></a>
+        <p>Free creative resources for artists, designers, and 3D enthusiasts.</p>
+      </div>
+      <div class="footer__links">
+        <h4>Browse</h4>
+        <ul>
+          <li><a href="resources.html?category=blender">Blender</a></li>
+          <li><a href="resources.html?category=vfx">VFX</a></li>
+          <li><a href="resources.html?category=models">3D Models</a></li>
+          <li><a href="resources.html?category=textures">Textures</a></li>
+        </ul>
+      </div>
+      <div class="footer__links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom container">
+      <p>© 2025 NexusAssets. Built for creators.</p>
+    </div>
+  </footer>
+
+  <!--
+    Script load order matters:
+    1. data.js        — ASSETS array and helper functions
+    2. supabase-client.js — supabaseInsert()
+    3. leads.js       — submitLead() which calls supabaseInsert()
+    4. main.js        — nav, toast, etc.
+    5. inline script  — page-specific logic (reads URL params, handles form)
+  -->
+  <script src="../js/data.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/leads.js"></script>
+  <script src="../js/main.js"></script>
+
+  <script>
+  /* ================================================================
+     contact-premium.html — Page logic
+     ================================================================
+     Responsibilities:
+     1. Read URL params: ?id=, ?type=, ?asset=, ?subject=
+     2. Adapt all wording based on resource type (premium vs contact)
+     3. Pre-fill form fields and contact links
+     4. Handle form submission → submitLead() → Supabase
+     5. Show loading, success, and error states
+  ================================================================ */
+
+  (function () {
+
+    // ── 1. Read URL parameters ─────────────────────────────────────
+    const params       = new URLSearchParams(window.location.search);
+    const resourceId   = parseInt(params.get('id'))   || null;
+    const resourceType = params.get('type')            || 'premium';
+    const assetName    = decodeURIComponent(params.get('asset')   || '');
+    const subject      = decodeURIComponent(params.get('subject') || assetName);
+
+    // ── 2. Adapt wording based on type ─────────────────────────────
+    const isPremium = resourceType !== 'contact';
+    // premium → "Let's Talk", contact → "Request This"
+
+    const copy = {
+      premium: {
+        heroLabel:       'Premium Resource',
+        heroTitle:       'Let\'s Talk 💎',
+        heroSub:         assetName
+          ? `You're interested in "${assetName}". Reach out through any channel below — no commitment required.`
+          : 'You\'re interested in a premium resource. Reach out and we\'ll get back to you quickly.',
+        breadcrumb:      'Get in Touch',
+        channelsTitle:   'Choose how to reach us',
+        channelsSub:     'We\'re active on all channels. Pick whichever is easiest for you.',
+        expectTitle:     'What happens next?',
+        expectItems:     [
+          'We\'ll confirm what\'s included in the resource',
+          'We\'ll share pricing and delivery details',
+          'No commitment until you\'re happy',
+          'We reply within 48 hours on all channels'
+        ],
+        formTitle:       'Or send us a message',
+        formSub:         'Fill in the form and we\'ll reach out on your preferred channel.',
+        successMsg:      'Thanks for reaching out. We\'ll reply within 48 hours with details and pricing.',
+        messagePlaceholder: 'Tell us what you need, any questions you have, or how you plan to use this resource...'
+      },
+      contact: {
+        heroLabel:       'Resource Request',
+        heroTitle:       'Request This 📋',
+        heroSub:         assetName
+          ? `You'd like to request "${assetName}". Send us a message and we'll get back to you.`
+          : 'You\'d like to request a resource. Send us a message and we\'ll get back to you.',
+        breadcrumb:      'Send a Request',
+        channelsTitle:   'How to send your request',
+        channelsSub:     'Reach out through any channel. We\'ll confirm availability and next steps.',
+        expectTitle:     'After you request',
+        expectItems:     [
+          'We\'ll confirm if and when the resource is available',
+          'We\'ll explain what\'s included and any conditions',
+          'No payment or commitment until you confirm',
+          'We reply within 48 hours'
+        ],
+        formTitle:       'Send a request',
+        formSub:         'Describe what you\'re looking for and we\'ll get back to you.',
+        successMsg:      'Request received! We\'ll review it and reply within 48 hours.',
+        messagePlaceholder: 'Describe what you\'re looking for, how you plan to use it, and any specific requirements...'
+      }
+    };
+
+    const c = isPremium ? copy.premium : copy.contact;
+
+    // Apply all copy to the DOM
+    function setEl(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    setEl('heroLabel',        c.heroLabel);
+    setEl('heroTitle',        c.heroTitle);
+    setEl('heroSub',          c.heroSub);
+    setEl('breadcrumbCurrent',c.breadcrumb);
+    setEl('channelsTitle',    c.channelsTitle);
+    setEl('channelsSub',      c.channelsSub);
+    setEl('expectTitle',      c.expectTitle);
+    setEl('formTitle',        c.formTitle);
+    setEl('formSub',          c.formSub);
+    document.title = `${c.heroLabel} — NexusAssets`;
+
+    // Update expect list items
+    const expectList = document.getElementById('expectList');
+    if (expectList) {
+      expectList.innerHTML = c.expectItems
+        .map(item => `<li>${item}</li>`)
+        .join('');
+    }
+
+    // Update message textarea placeholder
+    const msgArea = document.getElementById('cpMessage');
+    if (msgArea) msgArea.placeholder = c.messagePlaceholder;
+
+    // ── 3. Pre-fill resource field and contact links ───────────────
+
+    // Resource input — pre-filled and readonly so it always arrives correct
+    const cpResource = document.getElementById('cpResource');
+    if (cpResource && assetName) {
+      cpResource.value = assetName;
+    }
+
+    // WhatsApp — pre-fill message text with resource name
+    const waLink = document.getElementById('whatsappLink');
+    if (waLink && assetName) {
+      const waMsg = encodeURIComponent(
+        isPremium
+          ? `Hi NexusAssets! I'm interested in: ${assetName}`
+          : `Hi NexusAssets! I'd like to request: ${assetName}`
+      );
+      waLink.href = `https://wa.me/2349035738136?text=`;
+    }
+
+    // Email — pre-fill subject line
+    const emailLink = document.getElementById('emailLink');
+    if (emailLink && subject) {
+      emailLink.href = `mailto:skylurd001@gmail.com?subject=`;
+    }
+
+    // ── 4. Form submission ─────────────────────────────────────────
+
+    // UI helpers
+    function showFieldError(el, show) {
+      if (!el) return;
+      el.style.borderColor = show ? 'var(--color-error)' : '';
+      el.style.boxShadow   = show
+        ? '0 0 0 3px rgba(248,113,113,0.15)'
+        : '';
+    }
+
+    function showError(message) {
+      const block = document.getElementById('cpError');
+      const text  = document.getElementById('cpErrorText');
+      if (text)  text.textContent = message;
+      if (block) block.style.display = 'flex';
+    }
+
+    function hideError() {
+      const block = document.getElementById('cpError');
+      if (block) block.style.display = 'none';
+    }
+
+    function setSubmitState(state) {
+      // state: 'idle' | 'loading' | 'done'
+      const btn = document.getElementById('cpSubmitBtn');
+      if (!btn) return;
+      if (state === 'loading') {
+        btn.textContent = 'Sending…';
+        btn.disabled    = true;
+        btn.style.opacity = '0.7';
+      } else if (state === 'done') {
+        btn.textContent = '✓ Sent!';
+        btn.disabled    = true;
+      } else {
+        btn.textContent = 'Send Message';
+        btn.disabled    = false;
+        btn.style.opacity = '';
+      }
+    }
+
+    const cpSubmitBtn = document.getElementById('cpSubmitBtn');
+    if (cpSubmitBtn) {
+
+      cpSubmitBtn.addEventListener('click', async function () {
+
+        // Read all field values
+        const firstName = document.getElementById('cpFirstName').value.trim();
+        const lastName  = document.getElementById('cpLastName').value.trim();
+        const email     = document.getElementById('cpEmail').value.trim();
+        const whatsapp  = document.getElementById('cpWhatsapp').value.trim();
+        const telegram  = document.getElementById('cpTelegram').value.trim();
+        const resource  = (cpResource && cpResource.value.trim()) || assetName;
+        const message   = document.getElementById('cpMessage').value.trim();
+        const consent   = document.getElementById('cpConsent').checked;
+
+        // Reset previous error states
+        hideError();
+        ['cpFirstName','cpLastName','cpEmail','cpResource','cpMessage'].forEach(id => {
+          showFieldError(document.getElementById(id), false);
+        });
+
+        // Validate required fields
+        let valid = true;
+        if (!firstName) { showFieldError(document.getElementById('cpFirstName'), true); valid = false; }
+        if (!lastName)  { showFieldError(document.getElementById('cpLastName'),  true); valid = false; }
+        if (!email)     { showFieldError(document.getElementById('cpEmail'),     true); valid = false; }
+        if (!message)   { showFieldError(document.getElementById('cpMessage'),   true); valid = false; }
+
+        if (!valid) {
+          showError('Please fill in all required fields.');
+          return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showFieldError(document.getElementById('cpEmail'), true);
+          showError('Please enter a valid email address.');
+          return;
+        }
+
+        if (!consent) {
+          showError('Please tick the consent checkbox to continue.');
+          return;
+        }
+
+        // ── Submit to Supabase ──────────────────────────────────
+        setSubmitState('loading');
+
+        const result = await submitLead({
+          first_name:         firstName,
+          last_name:          lastName,
+          email:              email,
+          whatsapp:           whatsapp,
+          telegram:           telegram,
+          resource_id:        resourceId,
+          resource_title:     resource,
+          resource_type:      resourceType,
+          message:            message,
+          marketing_consent:  consent
+        });
+
+        if (result.success) {
+          // ── Success ─────────────────────────────────────────
+          setSubmitState('done');
+
+          // Update success message with the correct wording
+          setEl('successMsg', c.successMsg);
+
+          // Swap form for success panel
+          document.getElementById('cpFormFields').style.display = 'none';
+          document.getElementById('cpFormSuccess').classList.add('visible');
+
+          // Toast as well
+          showToast(
+            isPremium ? 'Message sent! We\'ll be in touch soon.' : 'Request sent! We\'ll review and reply shortly.',
+            'success',
+            4000
+          );
+
+        } else {
+          // ── Error ───────────────────────────────────────────
+          setSubmitState('idle');
+          showError(result.error || 'Something went wrong. Please try again or contact us directly.');
+        }
+
+      });
+
+      // Clear individual field errors as the user types
+      ['cpFirstName','cpLastName','cpEmail','cpResource','cpMessage'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', function () {
+            showFieldError(this, false);
+            hideError();
+          });
+        }
+      });
+
+    }
+
+  })(); // end IIFE
+  </script>
+
+</body>
+</html>
