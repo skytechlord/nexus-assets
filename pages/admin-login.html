@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — NexusAssets</title>
+  <!--
+    No-index: admin pages should never appear in search results.
+  -->
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+
+  <div class="admin-login-page">
+    <div class="admin-login-card">
+
+      <!-- Logo -->
+      <div class="admin-login-card__logo">
+        <div class="admin-login-card__logo-text">
+          Nexus<span>Assets</span>
+        </div>
+        <span class="admin-login-card__badge">Admin Panel</span>
+      </div>
+
+      <h1 class="admin-login-card__title">Sign In</h1>
+      <p class="admin-login-card__sub">
+        Access is restricted to authorised administrators only.
+      </p>
+
+      <!-- Error message — shown by JS if login fails -->
+      <div class="admin-login-error" id="loginError" role="alert"></div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="adminEmail">Email Address</label>
+        <input
+          type="email"
+          id="adminEmail"
+          class="form-input"
+          placeholder="admin@example.com"
+          autocomplete="email"
+          autofocus
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label" for="adminPassword">Password</label>
+        <input
+          type="password"
+          id="adminPassword"
+          class="form-input"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <!-- Login button -->
+      <button id="loginBtn" class="btn btn--primary btn--lg btn--full">
+        Sign In
+      </button>
+
+      <!-- Back to public site -->
+      <a href="../index.html" class="admin-login-card__back">
+        ← Back to NexusAssets
+      </a>
+
+    </div>
+  </div>
+
+  <!--
+    Script load order:
+    supabase-client.js must load BEFORE this inline script
+    because it provides supabaseSignIn() and supabaseGetSession().
+
+    NOTE: admin-auth.js is NOT loaded here — that guard would
+    redirect to login if no session exists, creating an infinite
+    redirect loop. Login page handles its own session check below.
+  -->
+  <script src="../js/supabase-client.js"></script>
+
+  <script>
+  (function () {
+
+    /* ── If already logged in, go straight to admin ─────────── */
+    if (supabaseGetSession()) {
+      window.location.replace('admin.html');
+      return;
+    }
+
+    /* ── DOM refs ────────────────────────────────────────────── */
+    const loginBtn     = document.getElementById('loginBtn');
+    const emailInput   = document.getElementById('adminEmail');
+    const passwordInput= document.getElementById('adminPassword');
+    const errorBlock   = document.getElementById('loginError');
+
+    /* ── Helpers ─────────────────────────────────────────────── */
+    function showError(message) {
+      errorBlock.textContent = message;
+      errorBlock.classList.add('visible');
+    }
+
+    function hideError() {
+      errorBlock.classList.remove('visible');
+      errorBlock.textContent = '';
+    }
+
+    function setLoading(loading) {
+      if (loading) {
+        loginBtn.textContent = 'Signing in…';
+        loginBtn.disabled    = true;
+        loginBtn.style.opacity = '0.7';
+      } else {
+        loginBtn.textContent = 'Sign In';
+        loginBtn.disabled    = false;
+        loginBtn.style.opacity = '';
+      }
+    }
+
+    /* ── Submit on Enter key in either field ─────────────────── */
+    [emailInput, passwordInput].forEach(input => {
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') loginBtn.click();
+      });
+      input.addEventListener('input', hideError);
+    });
+
+    /* ── Login button click ──────────────────────────────────── */
+    loginBtn.addEventListener('click', async function () {
+
+      const email    = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      hideError();
+
+      // Basic validation
+      if (!email || !password) {
+        showError('Please enter your email and password.');
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('Please enter a valid email address.');
+        return;
+      }
+
+      setLoading(true);
+
+      // Call Supabase Auth via supabase-client.js
+      const { session, error } = await supabaseSignIn(email, password);
+
+      if (error) {
+        setLoading(false);
+        showError(error);
+        // Clear the password field on failure — good security practice
+        passwordInput.value = '';
+        passwordInput.focus();
+        return;
+      }
+
+      // Success — session is now stored in sessionStorage
+      // Redirect to the admin dashboard
+      window.location.replace('admin.html');
+    });
+
+  })();
+  </script>
+
+</body>
+</html>

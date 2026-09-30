@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — NexusAssets</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+
+  <!--
+    SCRIPT LOAD ORDER — security critical.
+
+    1. supabase-client.js — provides supabaseGetSession(), supabaseSignOut()
+    2. admin-auth.js      — runs immediately on load, checks session.
+                           If no valid session exists, redirects to
+                           admin-login.html before any page content renders.
+                           Unauthenticated users never see this page.
+
+    NOTE: This page makes NO Supabase data calls.
+    Authentication is verified entirely by the session check in admin-auth.js
+    and enforced at the database level by Supabase RLS policies.
+    Data fetching will be added in the next phase after auth is confirmed.
+  -->
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/admin-auth.js"></script>
+
+  <div class="admin-wrapper">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────────────── -->
+    <aside class="admin-sidebar">
+
+      <div class="admin-sidebar__logo">
+        <a href="admin.html">Nexus<span>Assets</span></a>
+        <span class="admin-sidebar__badge">Admin Panel</span>
+      </div>
+
+      <nav class="admin-nav">
+
+        <div class="admin-nav__section">
+          <span class="admin-nav__label">Main</span>
+
+          <a href="admin.html" class="admin-nav__link active">
+            <span class="admin-nav__icon">📊</span>
+            Dashboard
+          </a>
+
+          <a href="admin-leads.html" class="admin-nav__link">
+            <span class="admin-nav__icon">👥</span>
+            Leads
+          </a>
+
+          <a href="#" class="admin-nav__link">
+            <span class="admin-nav__icon">📦</span>
+            Resources
+            <span class="admin-nav__soon">Soon</span>
+          </a>
+        </div>
+
+        <div class="admin-nav__section">
+          <span class="admin-nav__label">Config</span>
+
+          <a href="#" class="admin-nav__link">
+            <span class="admin-nav__icon">⚙️</span>
+            Settings
+            <span class="admin-nav__soon">Soon</span>
+          </a>
+
+          <a href="../index.html" class="admin-nav__link" target="_blank" rel="noopener">
+            <span class="admin-nav__icon">🌐</span>
+            View Site
+          </a>
+        </div>
+
+      </nav>
+
+      <!-- Admin identity + logout -->
+      <div class="admin-sidebar__footer">
+        <div class="admin-sidebar__user">
+          <div class="admin-sidebar__avatar" id="adminAvatar">A</div>
+          <!--
+            Populated by admin-auth.js with the signed-in admin's email.
+            Do not remove this id — admin-auth.js targets it.
+          -->
+          <div class="admin-sidebar__email" id="adminEmail">Loading…</div>
+        </div>
+
+        <!--
+          Wired by admin-auth.js — no extra JS needed here.
+          Clicking calls supabaseSignOut() then redirects to login.
+        -->
+        <button id="logoutBtn">
+          <span>🚪</span> Sign Out
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- ── MAIN CONTENT ──────────────────────────────────────────── -->
+    <div class="admin-main">
+
+      <!-- Topbar -->
+      <div class="admin-topbar">
+        <div>
+          <div class="admin-topbar__title">Dashboard</div>
+          <div class="admin-topbar__sub" id="dashboardDate"></div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="admin-content">
+
+        <!-- Welcome block -->
+        <div class="admin-section">
+          <div class="admin-section__header">
+            <span class="admin-section__title">Welcome to NexusAssets Admin</span>
+          </div>
+          <div class="admin-section__body">
+            <div class="admin-placeholder">
+              <div class="admin-placeholder__icon">✅</div>
+              <h3>Authentication successful</h3>
+              <p>
+                You are signed in as <strong id="welcomeEmail">—</strong>.<br />
+                The lead management system will be available in the next phase.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coming next -->
+        <div class="admin-section">
+          <div class="admin-section__header">
+            <span class="admin-section__title">Coming Next</span>
+          </div>
+          <div class="admin-section__body">
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:var(--space-lg);">
+
+              <div style="
+                background:var(--color-bg);
+                border:1px solid var(--color-border);
+                border-radius:var(--radius-lg);
+                padding:var(--space-xl);
+                opacity:0.6;">
+                <div style="font-size:1.5rem; margin-bottom:var(--space-sm);">👥</div>
+                <div style="font-size:0.88rem; font-weight:600; color:var(--color-text); margin-bottom:4px;">Leads Management</div>
+                <div style="font-size:0.8rem; color:var(--color-text-muted);">View, filter, update status, add notes</div>
+              </div>
+
+              <div style="
+                background:var(--color-bg);
+                border:1px solid var(--color-border);
+                border-radius:var(--radius-lg);
+                padding:var(--space-xl);
+                opacity:0.6;">
+                <div style="font-size:1.5rem; margin-bottom:var(--space-sm);">📦</div>
+                <div style="font-size:0.88rem; font-weight:600; color:var(--color-text); margin-bottom:4px;">Resources Management</div>
+                <div style="font-size:0.8rem; color:var(--color-text-muted);">Add, edit, manage downloads</div>
+              </div>
+
+              <div style="
+                background:var(--color-bg);
+                border:1px solid var(--color-border);
+                border-radius:var(--radius-lg);
+                padding:var(--space-xl);
+                opacity:0.6;">
+                <div style="font-size:1.5rem; margin-bottom:var(--space-sm);">📊</div>
+                <div style="font-size:0.88rem; font-weight:600; color:var(--color-text); margin-bottom:4px;">Analytics</div>
+                <div style="font-size:0.8rem; color:var(--color-text-muted);">Downloads, traffic, conversions</div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+  (function () {
+    // Date in topbar
+    const dateEl = document.getElementById('dashboardDate');
+    if (dateEl) {
+      dateEl.textContent = new Date().toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+    }
+
+    // Admin avatar initial and welcome email
+    // window.ADMIN_SESSION is set by admin-auth.js before this runs
+    if (window.ADMIN_SESSION && window.ADMIN_SESSION.user) {
+      const email = window.ADMIN_SESSION.user.email || '';
+
+      const avatarEl = document.getElementById('adminAvatar');
+      if (avatarEl) avatarEl.textContent = email.charAt(0).toUpperCase();
+
+      const welcomeEl = document.getElementById('welcomeEmail');
+      if (welcomeEl) welcomeEl.textContent = email;
+    }
+  })();
+  </script>
+
+</body>
+</html>

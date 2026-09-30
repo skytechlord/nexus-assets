@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leads — NexusAssets Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+
+  <!-- Auth guard runs before page renders -->
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/admin-auth.js"></script>
+
+  <div class="admin-wrapper">
+
+    <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__logo">
+        <a href="admin.html">Nexus<span>Assets</span></a>
+        <span class="admin-sidebar__badge">Admin Panel</span>
+      </div>
+
+      <nav class="admin-nav">
+        <div class="admin-nav__section">
+          <span class="admin-nav__label">Main</span>
+          <a href="admin.html" class="admin-nav__link">
+            <span class="admin-nav__icon">📊</span>
+            Dashboard
+          </a>
+          <a href="admin-leads.html" class="admin-nav__link active">
+            <span class="admin-nav__icon">👥</span>
+            Leads
+          </a>
+          <a href="#" class="admin-nav__link">
+            <span class="admin-nav__icon">📦</span>
+            Resources
+            <span class="admin-nav__soon">Soon</span>
+          </a>
+        </div>
+        <div class="admin-nav__section">
+          <span class="admin-nav__label">Config</span>
+          <a href="#" class="admin-nav__link">
+            <span class="admin-nav__icon">⚙️</span>
+            Settings
+            <span class="admin-nav__soon">Soon</span>
+          </a>
+          <a href="../index.html" class="admin-nav__link" target="_blank" rel="noopener">
+            <span class="admin-nav__icon">🌐</span>
+            View Site
+          </a>
+        </div>
+      </nav>
+
+      <div class="admin-sidebar__footer">
+        <div class="admin-sidebar__user">
+          <div class="admin-sidebar__avatar" id="adminAvatar">A</div>
+          <div class="admin-sidebar__email" id="adminEmail">Loading…</div>
+        </div>
+        <button id="logoutBtn"><span>🚪</span> Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- ── MAIN CONTENT ─────────────────────────────────────── -->
+    <div class="admin-main">
+
+      <div class="admin-topbar">
+        <div>
+          <div class="admin-topbar__title">Leads</div>
+          <div class="admin-topbar__sub" id="leadsSubtitle">Loading…</div>
+        </div>
+      </div>
+
+      <div class="admin-content">
+
+        <!-- Toolbar: search + status filter pills -->
+        <div class="leads-toolbar">
+
+          <div class="leads-search-wrap">
+            <input
+              type="search"
+              id="leadsSearch"
+              class="leads-search"
+              placeholder="Search by name, email, or resource…"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="leads-filters" id="leadsFilters">
+            <button class="leads-filter-btn active" data-status="all">All</button>
+            <button class="leads-filter-btn" data-status="new">New</button>
+            <button class="leads-filter-btn" data-status="contacted">Contacted</button>
+            <button class="leads-filter-btn" data-status="interested">Interested</button>
+            <button class="leads-filter-btn" data-status="follow_up">Follow Up</button>
+            <button class="leads-filter-btn" data-status="negotiating">Negotiating</button>
+            <button class="leads-filter-btn" data-status="customer">Customer</button>
+            <button class="leads-filter-btn" data-status="not_interested">Not Interested</button>
+          </div>
+
+        </div>
+
+        <!-- Results count -->
+        <p class="leads-count" id="leadsCount"></p>
+
+        <!-- Table container — JS renders into this -->
+        <div id="leadsTableContainer">
+          <div class="leads-state">
+            <div class="leads-state__icon">⏳</div>
+            <h3>Loading leads…</h3>
+            <p>Fetching from Supabase</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── LEAD DETAIL MODAL ──────────────────────────────────── -->
+  <!--
+    Hidden by default. JS opens it when a lead row is clicked.
+    All editable fields (status, admin_notes) are inside here.
+    Closing without saving discards changes.
+  -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+
+      <div class="modal__header">
+        <span class="modal__title" id="modalTitle">Lead Details</span>
+        <button class="modal__close" id="modalClose" aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal__body">
+
+        <!-- Read-only contact fields -->
+        <div class="modal-field-group">
+          <div class="modal-field">
+            <span class="modal-field__label">First Name</span>
+            <div class="modal-field__value" id="mFirstName">—</div>
+          </div>
+          <div class="modal-field">
+            <span class="modal-field__label">Last Name</span>
+            <div class="modal-field__value" id="mLastName">—</div>
+          </div>
+        </div>
+
+        <div class="modal-field-group">
+          <div class="modal-field">
+            <span class="modal-field__label">Email</span>
+            <div class="modal-field__value" id="mEmail">—</div>
+          </div>
+          <div class="modal-field">
+            <span class="modal-field__label">WhatsApp</span>
+            <div class="modal-field__value" id="mWhatsapp">—</div>
+          </div>
+        </div>
+
+        <div class="modal-field-group">
+          <div class="modal-field">
+            <span class="modal-field__label">Telegram</span>
+            <div class="modal-field__value" id="mTelegram">—</div>
+          </div>
+          <div class="modal-field">
+            <span class="modal-field__label">Marketing Consent</span>
+            <div class="modal-field__value" id="mConsent">—</div>
+          </div>
+        </div>
+
+        <hr class="modal-divider" />
+
+        <div class="modal-field-group">
+          <div class="modal-field">
+            <span class="modal-field__label">Resource</span>
+            <div class="modal-field__value" id="mResource">—</div>
+          </div>
+          <div class="modal-field">
+            <span class="modal-field__label">Resource Type</span>
+            <div class="modal-field__value" id="mResourceType">—</div>
+          </div>
+        </div>
+
+        <div class="modal-field" style="margin-bottom:var(--space-lg);">
+          <span class="modal-field__label">Message</span>
+          <div class="modal-field__value" id="mMessage" style="white-space:pre-wrap; line-height:1.6;">—</div>
+        </div>
+
+        <hr class="modal-divider" />
+
+        <div class="modal-field-group">
+          <div class="modal-field">
+            <span class="modal-field__label">Submitted</span>
+            <div class="modal-field__value" id="mCreatedAt">—</div>
+          </div>
+          <div class="modal-field">
+            <span class="modal-field__label">Last Updated</span>
+            <div class="modal-field__value" id="mUpdatedAt">—</div>
+          </div>
+        </div>
+
+        <hr class="modal-divider" />
+
+        <!-- Editable: Status -->
+        <div class="modal-field" style="margin-bottom:var(--space-lg);">
+          <label class="modal-field__label" for="mStatus">Status</label>
+          <select id="mStatus" class="modal-select">
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="interested">Interested</option>
+            <option value="follow_up">Follow Up</option>
+            <option value="negotiating">Negotiating</option>
+            <option value="customer">Customer</option>
+            <option value="not_interested">Not Interested</option>
+          </select>
+        </div>
+
+        <!-- Editable: Admin Notes -->
+        <div class="modal-field">
+          <label class="modal-field__label" for="mNotes">Admin Notes</label>
+          <textarea
+            id="mNotes"
+            class="modal-textarea"
+            placeholder="Internal notes — not visible to the visitor…"
+          ></textarea>
+        </div>
+
+        <!-- Delete confirmation block — hidden until delete is clicked -->
+        <div class="delete-confirm" id="deleteConfirm">
+          ⚠️ Are you sure you want to permanently delete this lead?
+          This cannot be undone.
+          <div style="margin-top:var(--space-sm); display:flex; gap:var(--space-sm);">
+            <button id="deleteConfirmYes" class="btn btn--sm" style="background:#f87171;border-color:#f87171;color:#fff;">
+              Yes, Delete
+            </button>
+            <button id="deleteConfirmNo" class="btn btn--outline btn--sm">Cancel</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal__footer">
+        <!-- Left: delete trigger -->
+        <button id="deleteBtn" class="btn btn--outline btn--sm" style="color:#f87171; border-color:rgba(248,113,113,0.4);">
+          🗑 Delete Lead
+        </button>
+
+        <!-- Right: save -->
+        <div style="display:flex; gap:var(--space-sm); align-items:center;">
+          <span id="saveStatus" style="font-size:0.82rem; color:var(--color-text-muted);"></span>
+          <button id="saveBtn" class="btn btn--primary btn--sm">Save Changes</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  /* ================================================================
+     Minimal toast — self-contained, no main.js dependency.
+     Uses the same #toast-container and .toast styles from global.css.
+  ================================================================ */
+  (function () {
+    const tc = document.createElement('div');
+    tc.id = 'toast-container';
+    document.body.appendChild(tc);
+  })();
+
+  function showToast(message, type, duration) {
+    type     = type     || 'success';
+    duration = duration || 3000;
+    const tc    = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast--${type}`;
+    const icons = { success: '✓', info: 'ℹ', error: '✕' };
+    toast.innerHTML = `<span class="toast__icon">${icons[type] || icons.info}</span><span class="toast__message">${message}</span>`;
+    tc.appendChild(toast);
+    requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('toast--visible')));
+    setTimeout(() => {
+      toast.classList.remove('toast--visible');
+      toast.classList.add('toast--hiding');
+      toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+    }, duration);
+  }
+
+  /* ================================================================
+     admin-leads.js (inline)
+     ================================================================
+     All lead management logic is self-contained here.
+     Depends on (loaded above):
+       - supabase-client.js  → supabaseFetch, supabaseUpdate, supabaseDelete
+       - admin-auth.js       → guards the page, sets window.ADMIN_SESSION
+  ================================================================ */
+  (function () {
+
+    /* ── State ─────────────────────────────────────────────── */
+    let allLeads      = [];   // full array from Supabase
+    let filteredLeads = [];   // after search + status filter
+    let activeStatus  = 'all';
+    let searchQuery   = '';
+    let openLeadId    = null; // id of lead currently in modal
+
+    /* ── Admin avatar ──────────────────────────────────────── */
+    if (window.ADMIN_SESSION && window.ADMIN_SESSION.user) {
+      const email = window.ADMIN_SESSION.user.email || '';
+      const av = document.getElementById('adminAvatar');
+      if (av) av.textContent = email.charAt(0).toUpperCase();
+    }
+
+    /* ================================================================
+       STATUS COLOURS
+       Maps each status value to a display colour and label.
+       Must match the CHECK constraint in the Supabase schema.
+    ================================================================ */
+    const STATUS_META = {
+      new:            { label: 'New',            color: '#7c6af5' },
+      contacted:      { label: 'Contacted',       color: '#60a5fa' },
+      interested:     { label: 'Interested',      color: '#4ade80' },
+      follow_up:      { label: 'Follow Up',       color: '#f5a623' },
+      negotiating:    { label: 'Negotiating',     color: '#f59e0b' },
+      customer:       { label: 'Customer',        color: '#4ade80' },
+      not_interested: { label: 'Not Interested',  color: '#f87171' }
+    };
+
+    function statusBadge(status) {
+      const meta  = STATUS_META[status] || { label: status, color: '#7a7a9a' };
+      return `<span class="lead-status-badge"
+        style="color:${meta.color}; background:${meta.color}1a;">
+        ${meta.label}
+      </span>`;
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    /* ================================================================
+       FETCH ALL LEADS FROM SUPABASE
+    ================================================================ */
+    async function fetchLeads() {
+      const container = document.getElementById('leadsTableContainer');
+      container.innerHTML = `
+        <div class="leads-state">
+          <div class="leads-state__icon">⏳</div>
+          <h3>Loading leads…</h3>
+          <p>Fetching from Supabase</p>
+        </div>`;
+
+      const { data, error } = await supabaseFetch(
+        'leads',
+        '?select=*&order=created_at.desc'
+      );
+
+      if (error) {
+        container.innerHTML = `
+          <div class="leads-state">
+            <div class="leads-state__icon">⚠️</div>
+            <h3>Failed to load leads</h3>
+            <p>${error}</p>
+          </div>`;
+        return;
+      }
+
+      allLeads = data || [];
+      updateSubtitle();
+      applyFilters();
+    }
+
+    function updateSubtitle() {
+      const el = document.getElementById('leadsSubtitle');
+      if (el) el.textContent = `${allLeads.length} total lead${allLeads.length !== 1 ? 's' : ''}`;
+    }
+
+    /* ================================================================
+       FILTER + SEARCH (client-side, no extra DB calls)
+    ================================================================ */
+    function applyFilters() {
+      let result = allLeads;
+
+      // Status filter
+      if (activeStatus !== 'all') {
+        result = result.filter(l => l.status === activeStatus);
+      }
+
+      // Search filter — name, email, resource_title
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        result = result.filter(l =>
+          (`${l.first_name} ${l.last_name}`).toLowerCase().includes(q) ||
+          (l.email || '').toLowerCase().includes(q) ||
+          (l.resource_title || '').toLowerCase().includes(q)
+        );
+      }
+
+      filteredLeads = result;
+      renderTable();
+    }
+
+    /* ================================================================
+       RENDER TABLE
+    ================================================================ */
+    function renderTable() {
+      const container = document.getElementById('leadsTableContainer');
+      const countEl   = document.getElementById('leadsCount');
+
+      if (countEl) {
+        countEl.innerHTML = `Showing <span>${filteredLeads.length}</span> of <span>${allLeads.length}</span> lead${allLeads.length !== 1 ? 's' : ''}`;
+      }
+
+      if (filteredLeads.length === 0) {
+        container.innerHTML = `
+          <div class="leads-state">
+            <div class="leads-state__icon">📭</div>
+            <h3>${allLeads.length === 0 ? 'No leads yet' : 'No leads match your filter'}</h3>
+            <p>${allLeads.length === 0 ? 'Leads submitted through the contact forms will appear here.' : 'Try a different search term or status filter.'}</p>
+          </div>`;
+        return;
+      }
+
+      const rows = filteredLeads.map(lead => `
+        <tr data-id="${lead.id}" tabindex="0" role="button" aria-label="View lead from ${lead.first_name} ${lead.last_name}">
+          <td>
+            <div style="font-weight:500;">${lead.first_name} ${lead.last_name}</div>
+            <div class="lead-cell-muted">${lead.email}</div>
+          </td>
+          <td class="lead-cell-muted">${lead.whatsapp || '—'}</td>
+          <td>
+            <div style="font-size:0.85rem;">${lead.resource_title || '—'}</div>
+            <div class="lead-cell-muted">${lead.resource_type}</div>
+          </td>
+          <td>${statusBadge(lead.status)}</td>
+          <td class="lead-cell-muted">${lead.marketing_consent
+            ? '<span class="lead-consent-yes">✓ Yes</span>'
+            : '<span class="lead-consent-no">✗ No</span>'}</td>
+          <td class="lead-cell-muted">${formatDate(lead.created_at)}</td>
+        </tr>`).join('');
+
+      container.innerHTML = `
+        <div class="leads-table-wrap">
+          <table class="leads-table">
+            <thead>
+              <tr>
+                <th>Name / Email</th>
+                <th>WhatsApp</th>
+                <th>Resource</th>
+                <th>Status</th>
+                <th>Consent</th>
+                <th>Submitted</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody">${rows}</tbody>
+          </table>
+        </div>`;
+
+      // Attach click listeners to each row
+      document.querySelectorAll('#leadsTableBody tr').forEach(row => {
+        row.addEventListener('click', () => openModal(row.dataset.id));
+        // Also allow keyboard activation
+        row.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') openModal(row.dataset.id);
+        });
+      });
+    }
+
+    /* ================================================================
+       MODAL — open with lead data
+    ================================================================ */
+    function openModal(id) {
+      const lead = allLeads.find(l => l.id === id);
+      if (!lead) return;
+      openLeadId = id;
+
+      // Populate read-only fields
+      document.getElementById('modalTitle').textContent =
+        `${lead.first_name} ${lead.last_name}`;
+      document.getElementById('mFirstName').textContent  = lead.first_name || '—';
+      document.getElementById('mLastName').textContent   = lead.last_name  || '—';
+      document.getElementById('mEmail').innerHTML =
+        `<a href="mailto:${lead.email}">${lead.email}</a>`;
+      document.getElementById('mWhatsapp').innerHTML = lead.whatsapp
+        ? `<a href="https://wa.me/${lead.whatsapp.replace(/\D/g,'')}" target="_blank" rel="noopener">${lead.whatsapp}</a>`
+        : '—';
+      document.getElementById('mTelegram').innerHTML = lead.telegram
+        ? `<a href="https://t.me/${lead.telegram.replace('@','')}" target="_blank" rel="noopener">${lead.telegram}</a>`
+        : '—';
+      document.getElementById('mConsent').textContent =
+        lead.marketing_consent ? '✓ Yes' : '✗ No';
+      document.getElementById('mResource').textContent     = lead.resource_title || '—';
+      document.getElementById('mResourceType').textContent = lead.resource_type   || '—';
+      document.getElementById('mMessage').textContent      = lead.message         || '—';
+      document.getElementById('mCreatedAt').textContent    = formatDate(lead.created_at);
+      document.getElementById('mUpdatedAt').textContent    = formatDate(lead.updated_at);
+
+      // Populate editable fields
+      document.getElementById('mStatus').value = lead.status || 'new';
+      document.getElementById('mNotes').value  = lead.admin_notes || '';
+
+      // Reset UI state
+      document.getElementById('saveStatus').textContent = '';
+      document.getElementById('saveBtn').textContent    = 'Save Changes';
+      document.getElementById('saveBtn').disabled       = false;
+      document.getElementById('deleteConfirm').classList.remove('visible');
+
+      // Show overlay
+      document.getElementById('modalOverlay').classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('visible');
+      document.body.style.overflow = '';
+      openLeadId = null;
+      document.getElementById('deleteConfirm').classList.remove('visible');
+    }
+
+    /* ================================================================
+       SAVE — update status + admin_notes in Supabase
+    ================================================================ */
+    document.getElementById('saveBtn').addEventListener('click', async function () {
+      if (!openLeadId) return;
+
+      const newStatus = document.getElementById('mStatus').value;
+      const newNotes  = document.getElementById('mNotes').value.trim();
+
+      this.textContent = 'Saving…';
+      this.disabled    = true;
+      document.getElementById('saveStatus').textContent = '';
+
+      const { data, error } = await supabaseUpdate(
+        'leads',
+        `?id=eq.${openLeadId}`,
+        {
+          status:      newStatus,
+          admin_notes: newNotes
+          // updated_at is handled automatically by the Supabase trigger
+        }
+      );
+
+      if (error) {
+        this.textContent = 'Save Changes';
+        this.disabled    = false;
+        document.getElementById('saveStatus').textContent = '⚠️ ' + error;
+        return;
+      }
+
+      // Update local array so the table reflects the change immediately
+      const idx = allLeads.findIndex(l => l.id === openLeadId);
+      if (idx !== -1) {
+        allLeads[idx].status      = newStatus;
+        allLeads[idx].admin_notes = newNotes;
+      }
+
+      this.textContent = '✓ Saved';
+      document.getElementById('saveStatus').textContent = '';
+
+      // Re-render the table (status badge may have changed)
+      applyFilters();
+
+      // Reset button after a moment
+      setTimeout(() => {
+        this.textContent = 'Save Changes';
+        this.disabled    = false;
+      }, 2000);
+    });
+
+    /* ================================================================
+       DELETE — with confirmation step
+    ================================================================ */
+    document.getElementById('deleteBtn').addEventListener('click', function () {
+      document.getElementById('deleteConfirm').classList.toggle('visible');
+    });
+
+    document.getElementById('deleteConfirmNo').addEventListener('click', function () {
+      document.getElementById('deleteConfirm').classList.remove('visible');
+    });
+
+    document.getElementById('deleteConfirmYes').addEventListener('click', async function () {
+      if (!openLeadId) return;
+
+      this.textContent = 'Deleting…';
+      this.disabled    = true;
+
+      const { data, error } = await supabaseDelete('leads', `?id=eq.${openLeadId}`);
+
+      if (error) {
+        this.textContent = 'Yes, Delete';
+        this.disabled    = false;
+        document.getElementById('saveStatus').textContent = '⚠️ Delete failed: ' + error;
+        document.getElementById('deleteConfirm').classList.remove('visible');
+        return;
+      }
+
+      // Remove from local array
+      allLeads = allLeads.filter(l => l.id !== openLeadId);
+      closeModal();
+      updateSubtitle();
+      applyFilters();
+      showToast('Lead deleted successfully.', 'success', 3000);
+    });
+
+    /* ================================================================
+       MODAL CLOSE — overlay click or X button
+    ================================================================ */
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+
+    document.getElementById('modalOverlay').addEventListener('click', function (e) {
+      // Only close if the click was on the overlay backdrop itself,
+      // not on the modal card inside it
+      if (e.target === this) closeModal();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    /* ================================================================
+       SEARCH — input listener
+    ================================================================ */
+    document.getElementById('leadsSearch').addEventListener('input', function () {
+      searchQuery = this.value.trim();
+      applyFilters();
+    });
+
+    /* ================================================================
+       STATUS FILTER PILLS — click listeners
+    ================================================================ */
+    document.querySelectorAll('.leads-filter-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        activeStatus = this.dataset.status;
+        document.querySelectorAll('.leads-filter-btn').forEach(b =>
+          b.classList.toggle('active', b.dataset.status === activeStatus)
+        );
+        applyFilters();
+      });
+    });
+
+    /* ================================================================
+       INIT
+    ================================================================ */
+    fetchLeads();
+
+  })();
+  </script>
+
+</body>
+</html>
