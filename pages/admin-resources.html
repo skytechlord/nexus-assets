@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources — NexusAssets Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+
+  <div class="admin-wrapper">
+
+    <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__logo">
+        <a href="admin.html">Nexus<span>Assets</span></a>
+        <span class="admin-sidebar__badge">Admin Panel</span>
+      </div>
+
+      <nav class="admin-nav">
+        <div class="admin-nav__section">
+          <span class="admin-nav__label">Main</span>
+          <a href="admin.html" class="admin-nav__link">
+            <span class="admin-nav__icon">📊</span>
+            Dashboard
+          </a>
+          <a href="admin-leads.html" class="admin-nav__link">
+            <span class="admin-nav__icon">👥</span>
+            Leads
+          </a>
+          <a href="admin-resources.html" class="admin-nav__link active">
+            <span class="admin-nav__icon">📦</span>
+            Resources
+          </a>
+        </div>
+        <div class="admin-nav__section">
+          <span class="admin-nav__label">Config</span>
+          <a href="#" class="admin-nav__link">
+            <span class="admin-nav__icon">⚙️</span>
+            Settings
+            <span class="admin-nav__soon">Soon</span>
+          </a>
+          <a href="../index.html" class="admin-nav__link" target="_blank" rel="noopener">
+            <span class="admin-nav__icon">🌐</span>
+            View Site
+          </a>
+        </div>
+      </nav>
+
+      <div class="admin-sidebar__footer">
+        <div class="admin-sidebar__user">
+          <div class="admin-sidebar__avatar" id="adminAvatar">A</div>
+          <div class="admin-sidebar__email" id="adminEmail">Loading…</div>
+        </div>
+        <button id="logoutBtn"><span>🚪</span> Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- ── MAIN CONTENT ─────────────────────────────────────── -->
+    <div class="admin-main">
+
+      <!-- Topbar -->
+      <div class="admin-topbar">
+        <div>
+          <div class="admin-topbar__title">Resources</div>
+          <div class="admin-topbar__sub" id="resSubtitle">Loading…</div>
+        </div>
+        <button id="resAddBtn" class="btn btn--primary btn--sm">
+          + Add Resource
+        </button>
+      </div>
+
+      <div class="admin-content">
+
+        <!-- ── Filters row ───────────────────────────────────── -->
+        <div class="res-toolbar">
+
+          <!-- Search -->
+          <div class="res-search-wrap">
+            <input type="search" id="resSearch" class="res-search"
+              placeholder="Search by title, description, or tags…"
+              autocomplete="off" />
+          </div>
+
+          <!-- Category dropdown -->
+          <select id="resCatFilter" class="res-form-select" style="width:auto; flex-shrink:0; padding:0.45rem 1rem;">
+            <option value="all">All Categories</option>
+            <option value="blender">Blender</option>
+            <option value="vfx">VFX</option>
+            <option value="models">3D Models</option>
+            <option value="textures">Textures</option>
+            <option value="templates">Templates</option>
+            <option value="audio">Audio</option>
+            <option value="graphics">Graphics</option>
+            <option value="developer">Developer</option>
+            <option value="software">Software</option>
+            <option value="windows">Windows</option>
+            <option value="plugins">Plugins</option>
+            <option value="productivity">Productivity</option>
+            <option value="other">Other</option>
+          </select>
+
+        </div>
+
+        <!-- Type + published + featured filter pills -->
+        <div style="display:flex; gap:var(--space-sm); flex-wrap:wrap; margin-bottom:var(--space-lg);">
+
+          <div class="res-filters">
+            <button class="res-filter-btn res-type-filter active" data-value="all">All Types</button>
+            <button class="res-filter-btn res-type-filter" data-value="free">Free</button>
+            <button class="res-filter-btn res-type-filter" data-value="premium">Premium</button>
+            <button class="res-filter-btn res-type-filter" data-value="contact">Contact</button>
+          </div>
+
+          <div class="res-filters">
+            <button class="res-filter-btn res-pub-filter active" data-value="all">All</button>
+            <button class="res-filter-btn res-pub-filter" data-value="published">Published</button>
+            <button class="res-filter-btn res-pub-filter" data-value="unpublished">Unpublished</button>
+          </div>
+
+          <div class="res-filters">
+            <button class="res-filter-btn res-featured-filter active" data-value="all">All</button>
+            <button class="res-filter-btn res-featured-filter" data-value="featured">Featured Only</button>
+          </div>
+
+        </div>
+
+        <!-- Results count -->
+        <p class="res-count" id="resCount"></p>
+
+        <!-- Table — JS renders into this -->
+        <div id="resTableWrap">
+          <div class="res-state">
+            <div class="res-state__icon">⏳</div>
+            <h3>Loading resources…</h3>
+            <p>Fetching from Supabase</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+    SLIDE-IN DRAWER — Add / Edit resource
+    Hidden by default. JS opens it via .visible class.
+    Overlay click closes the drawer.
+  ================================================================ -->
+  <div class="res-drawer-overlay" id="resDrawerOverlay">
+    <div class="res-drawer">
+
+      <div class="res-drawer__header">
+        <span class="res-drawer__title" id="resDrawerTitle">Add Resource</span>
+        <button class="res-drawer__close" id="resDrawerClose" aria-label="Close">✕</button>
+      </div>
+
+      <div class="res-drawer__body">
+
+        <!-- Validation error block -->
+        <div class="res-form-error" id="resFormError"></div>
+
+        <!-- ── Core fields ───────────────────────────────────── -->
+        <p class="res-form-section-title">Core Details</p>
+
+        <div class="res-form-group">
+          <label class="res-form-label" for="fTitle">Title <span class="required">*</span></label>
+          <input type="text" id="fTitle" class="res-form-input" placeholder="e.g. Node Wrangler Pro — Extended Pack" />
+        </div>
+
+        <div class="res-form-row">
+          <div class="res-form-group">
+            <label class="res-form-label" for="fCategory">Category <span class="required">*</span></label>
+            <select id="fCategory" class="res-form-select">
+              <option value="blender">Blender</option>
+              <option value="vfx">VFX</option>
+              <option value="models">3D Models</option>
+              <option value="textures">Textures</option>
+              <option value="templates">Templates</option>
+              <option value="audio">Audio</option>
+              <option value="graphics">Graphics</option>
+              <option value="developer">Developer</option>
+              <option value="software">Software</option>
+              <option value="windows">Windows</option>
+              <option value="plugins">Plugins</option>
+              <option value="productivity">Productivity</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="res-form-group">
+            <label class="res-form-label" for="fCategoryLabel">Category Label <span class="required">*</span></label>
+            <input type="text" id="fCategoryLabel" class="res-form-input" placeholder="e.g. Blender" />
+          </div>
+        </div>
+
+        <div class="res-form-group">
+          <label class="res-form-label" for="fDescription">Description <span class="required">*</span></label>
+          <textarea id="fDescription" class="res-form-textarea" placeholder="Short description shown on the resource card…"></textarea>
+        </div>
+
+        <div class="res-form-group">
+          <label class="res-form-label" for="fTags">Tags <span style="font-weight:400; text-transform:none; letter-spacing:0;">(comma-separated)</span></label>
+          <input type="text" id="fTags" class="res-form-input" placeholder="addon, nodes, shader, workflow" />
+        </div>
+
+        <hr class="res-form-divider" />
+
+        <!-- ── Media ─────────────────────────────────────────── -->
+        <p class="res-form-section-title">Media</p>
+
+        <div class="res-form-row">
+          <div class="res-form-group">
+            <label class="res-form-label" for="fEmoji">Emoji</label>
+            <input type="text" id="fEmoji" class="res-form-input" placeholder="🎨" maxlength="4" />
+          </div>
+          <div class="res-form-group">
+            <label class="res-form-label" for="fImage">Image URL</label>
+            <input type="url" id="fImage" class="res-form-input" placeholder="https://images.unsplash.com/…" />
+          </div>
+        </div>
+
+        <hr class="res-form-divider" />
+
+        <!-- ── File details ───────────────────────────────────── -->
+        <p class="res-form-section-title">File Details</p>
+
+        <div class="res-form-row">
+          <div class="res-form-group">
+            <label class="res-form-label" for="fFileSize">File Size</label>
+            <input type="text" id="fFileSize" class="res-form-input" placeholder="e.g. 1.2 MB" />
+          </div>
+          <div class="res-form-group">
+            <label class="res-form-label" for="fFileFormat">File Format</label>
+            <input type="text" id="fFileFormat" class="res-form-input" placeholder="e.g. ZIP (.py addon)" />
+          </div>
+        </div>
+
+        <div class="res-form-row">
+          <div class="res-form-group">
+            <label class="res-form-label" for="fVersion">Version</label>
+            <input type="text" id="fVersion" class="res-form-input" placeholder="e.g. 2.1.0" />
+          </div>
+          <div class="res-form-group">
+            <label class="res-form-label" for="fBlenderVersion">Blender Version</label>
+            <input type="text" id="fBlenderVersion" class="res-form-input" placeholder="e.g. 3.6+" />
+          </div>
+        </div>
+
+        <hr class="res-form-divider" />
+
+        <!-- ── Access type ────────────────────────────────────── -->
+        <p class="res-form-section-title">Access & Distribution</p>
+
+        <div class="res-form-row">
+          <div class="res-form-group">
+            <label class="res-form-label" for="fType">Resource Type</label>
+            <select id="fType" class="res-form-select">
+              <option value="free">Free</option>
+              <option value="premium">Premium</option>
+              <option value="contact">Contact</option>
+            </select>
+          </div>
+          <div class="res-form-group">
+            <label class="res-form-label" for="fDownloads">Download Count</label>
+            <input type="number" id="fDownloads" class="res-form-input" min="0" value="0" />
+          </div>
+        </div>
+
+        <!-- Download URL — shown for free type -->
+        <div class="res-form-group" id="fDownloadUrlRow">
+          <label class="res-form-label" for="fDownloadUrl">Download URL</label>
+          <input type="url" id="fDownloadUrl" class="res-form-input"
+            placeholder="https://github.com/…/releases/download/…/file.zip" />
+        </div>
+
+        <!-- Contact subject — shown for premium/contact types -->
+        <div class="res-form-group" id="fContactSubjectRow" style="display:none;">
+          <label class="res-form-label" for="fContactSubject">Contact Subject</label>
+          <input type="text" id="fContactSubject" class="res-form-input"
+            placeholder="e.g. Interested in Social Media UI Kit — Figma" />
+        </div>
+
+        <div class="res-form-row">
+          <div class="res-form-group">
+            <label class="res-form-label" for="fDateAdded">Date Added</label>
+            <input type="date" id="fDateAdded" class="res-form-input" />
+          </div>
+          <div class="res-form-group" style="display:flex; flex-direction:column; justify-content:flex-end; gap:var(--space-md); padding-bottom:2px;">
+            <label class="res-form-checkbox-row">
+              <input type="checkbox" id="fFeatured" />
+              Featured on homepage
+            </label>
+            <label class="res-form-checkbox-row">
+              <input type="checkbox" id="fPublished" checked />
+              Published (visible to public)
+            </label>
+          </div>
+        </div>
+
+        <hr class="res-form-divider" />
+
+        <!-- Admin Notes -->
+        <div class="res-form-group">
+          <label class="res-form-label" for="fAdminNotes">Admin Notes</label>
+          <textarea id="fAdminNotes" class="res-form-textarea"
+            placeholder="Internal notes — not visible to the public…"></textarea>
+        </div>
+
+        <!-- Delete confirmation block -->
+        <div class="res-delete-confirm" id="resDeleteConfirm">
+          ⚠️ Permanently delete this resource? This cannot be undone.
+          <div style="margin-top:var(--space-sm); display:flex; gap:var(--space-sm);">
+            <button id="resDeleteYes" class="btn btn--sm"
+              style="background:#f87171; border-color:#f87171; color:#fff;">
+              Yes, Delete
+            </button>
+            <button id="resDeleteNo" class="btn btn--outline btn--sm">Cancel</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="res-drawer__footer">
+        <!-- Left: delete (edit mode only) -->
+        <button id="resDeleteBtn" class="btn btn--outline btn--sm"
+          style="color:#f87171; border-color:rgba(248,113,113,0.4);">
+          🗑 Delete
+        </button>
+
+        <!-- Right: save -->
+        <div style="display:flex; gap:var(--space-sm); align-items:center;">
+          <span id="resSaveStatus" style="font-size:0.82rem; color:var(--color-text-muted);"></span>
+          <button id="resSaveBtn" class="btn btn--primary btn--sm">Add Resource</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Load JS after HTML — admin-auth.js runs on load -->
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/admin-auth.js"></script>
+  <script src="../js/admin-resources.js"></script>
+
+</body>
+</html>

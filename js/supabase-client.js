@@ -1,23 +1,18 @@
 /* ================================================================
-   js/supabase-client.js — Supabase connection + Auth
-   ================================================================
-   SECURITY:
-   Only the anon/public key lives here. Safe to commit.
-   RLS on the leads table allows INSERT only for anon users.
-   The service role key never goes in frontend code.
-
-   WHAT'S NEW:
-   Added auth helpers below supabaseInsert:
-   - supabaseSignIn(email, password)
-   - supabaseSignOut()
-   - supabaseGetSession()
-   - supabaseFetch(table, queryString)
+   js/supabase-client.js — Supabase connection + Auth + CRUD
 ================================================================ */
 
 const SUPABASE_URL      = 'https://gfdmlvhhumdvxvnyknpz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_2xjoS-5OOR0GU_pD6_SvIQ_2IUIt5qY';
 
-/* ── INSERT (unchanged) ─────────────────────────────────────── */
+/* ================================================================
+   PUBLIC INSERT — uses anon key
+   ================================================================
+   Used by public-facing lead submission forms (leads.js).
+   Visitors are unauthenticated, so the anon key is correct here.
+   RLS allows: anon INSERT on leads only.
+   DO NOT use this for admin operations on resources.
+================================================================ */
 async function supabaseInsert(table, record) {
   if (
     SUPABASE_URL      === 'YOUR_SUPABASE_PROJECT_URL' ||
@@ -49,16 +44,45 @@ async function supabaseInsert(table, record) {
 }
 
 /* ================================================================
-   AUTH — Sign in with email + password
+   ADMIN INSERT — uses authenticated session JWT
    ================================================================
-   Calls Supabase Auth token endpoint.
-   On success, stores the session in sessionStorage.
+   Used by admin pages to INSERT new records (e.g. add a resource).
+   Sends the admin's access_token so Supabase evaluates the request
+   under the `authenticated` role, satisfying admin INSERT policies.
 
-   WHY sessionStorage NOT localStorage?
-   sessionStorage clears when the browser tab closes — safer for
-   an admin panel on shared machines. localStorage would persist
-   until explicitly cleared.
+   WHY THIS IS SEPARATE FROM supabaseInsert():
+   supabaseInsert() uses the anon key — correct for public visitors
+   submitting leads. If we changed it to use the session token,
+   public lead submission would break for unauthenticated visitors.
+   Admin inserts need the authenticated JWT; public inserts need
+   the anon key. Two functions, two clear responsibilities.
 ================================================================ */
+async function supabaseAdminInsert(table, record) {
+  const session = supabaseGetSession();
+  if (!session) return { data: null, error: { message: 'Not authenticated.' } };
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+      method:  'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'apikey':        SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${session.access_token}`,
+        'Prefer':        'return=minimal'
+      },
+      body: JSON.stringify(record)
+    });
+    if (!response.ok) {
+      let errorBody = {};
+      try { errorBody = await response.json(); } catch (_) {}
+      return { data: null, error: { message: errorBody.message || `HTTP ${response.status}`, details: errorBody } };
+    }
+    return { data: true, error: null };
+  } catch (networkError) {
+    return { data: null, error: { message: 'Network error.' } };
+  }
+}
+
+/* ── AUTH — Sign in ─────────────────────────────────────────── */
 async function supabaseSignIn(email, password) {
   try {
     const response = await fetch(
@@ -97,12 +121,7 @@ async function supabaseSignOut() {
   sessionStorage.removeItem('na_session');
 }
 
-/* ================================================================
-   AUTH — Get current session (synchronous, no network call)
-   ================================================================
-   Returns null if not logged in or if token has expired.
-   Used by every admin page on load to guard access.
-================================================================ */
+/* ── AUTH — Get session ─────────────────────────────────────── */
 function supabaseGetSession() {
   try {
     const raw = sessionStorage.getItem('na_session');
@@ -120,13 +139,7 @@ function supabaseGetSession() {
   }
 }
 
-/* ================================================================
-   AUTH — Authenticated GET request
-   ================================================================
-   Sends the admin's access_token in the Authorization header.
-   This is what allows the RLS "admin can read leads" policy
-   to recognise the user and grant SELECT access.
-================================================================ */
+/* ── AUTH — Authenticated GET ───────────────────────────────── */
 async function supabaseFetch(table, queryString = '') {
   const session = supabaseGetSession();
   if (!session) return { data: null, error: 'Not authenticated.' };
@@ -151,17 +164,7 @@ async function supabaseFetch(table, queryString = '') {
   }
 }
 
-/* ================================================================
-   AUTH — Authenticated PATCH request (update a row)
-   ================================================================
-   Used by admin leads page to update status, admin_notes, etc.
-   Sends the admin's access_token — satisfies RLS update policy.
-
-   @param {string} table       - e.g. "leads"
-   @param {string} queryString - filter, e.g. "?id=eq.UUID"
-   @param {Object} updates     - fields to update, e.g. { status: "contacted" }
-   @returns {Promise<{data: boolean|null, error: string|null}>}
-================================================================ */
+/* ── AUTH — Authenticated PATCH ─────────────────────────────── */
 async function supabaseUpdate(table, queryString, updates) {
   const session = supabaseGetSession();
   if (!session) return { data: null, error: 'Not authenticated.' };
@@ -187,16 +190,7 @@ async function supabaseUpdate(table, queryString, updates) {
   }
 }
 
-/* ================================================================
-   AUTH — Authenticated DELETE request
-   ================================================================
-   Used by admin leads page to delete a lead row.
-   Sends the admin's access_token — satisfies RLS delete policy.
-
-   @param {string} table       - e.g. "leads"
-   @param {string} queryString - filter, e.g. "?id=eq.UUID"
-   @returns {Promise<{data: boolean|null, error: string|null}>}
-================================================================ */
+/* ── AUTH — Authenticated DELETE ────────────────────────────── */
 async function supabaseDelete(table, queryString) {
   const session = supabaseGetSession();
   if (!session) return { data: null, error: 'Not authenticated.' };
