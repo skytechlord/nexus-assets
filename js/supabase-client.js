@@ -213,3 +213,41 @@ async function supabaseDelete(table, queryString) {
     return { data: null, error: 'Network error.' };
   }
 }
+
+/* ================================================================
+   PUBLIC FETCH — anon key, no session required
+   ================================================================
+   Used by public-facing pages (index.html, resources.html,
+   download.html) to read published resources.
+
+   WHY SEPARATE FROM supabaseFetch()?
+   supabaseFetch() requires an authenticated admin session.
+   Public visitors are not logged in — they use the anon key.
+   The RLS policy "public can read published resources" allows
+   anon SELECT where published = true, so this works correctly.
+
+   @param {string} table
+   @param {string} queryString - e.g. "?published=eq.true&order=id.asc"
+   @returns {Promise<{data: Array|null, error: string|null}>}
+================================================================ */
+async function supabasePublicFetch(table, queryString = '') {
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${queryString}`, {
+      method:  'GET',
+      headers: {
+        'apikey':        SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Accept':        'application/json'
+      }
+    });
+    if (!response.ok) {
+      let errorBody = {};
+      try { errorBody = await response.json(); } catch (_) {}
+      return { data: null, error: errorBody.message || `HTTP ${response.status}` };
+    }
+    const data = await response.json();
+    return { data, error: null };
+  } catch (err) {
+    return { data: null, error: 'Network error.' };
+  }
+}

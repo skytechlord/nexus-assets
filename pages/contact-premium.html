@@ -274,7 +274,10 @@
 
   <!--
     Script load order matters:
-    1. data.js        — ASSETS array and helper functions
+    1. data.js        — blog posts + helpers and formatDownloads().
+                        Resources now come from Supabase, not data.js.
+                        Nothing on this page uses it; it is loaded to
+                        match the other public pages.
     2. supabase-client.js — supabaseInsert()
     3. leads.js       — submitLead() which calls supabaseInsert()
     4. main.js        — nav, toast, etc.

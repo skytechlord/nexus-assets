@@ -1,0 +1,26 @@
+# ── Local test files ─────────────────────────────────────────
+# Dummy download used only to test the download button
+NexusAssets-Test/
+NexusAssets-Test.zip
+
+# ── Review artifacts & backups ───────────────────────────────
+# Snapshots and review notes made around the Supabase migration
+backup-before-supabase-public-resources/
+supabase-public-migration-review/
+data-js-review.txt
+main-js-review.txt
+*-review.txt
+
+# Stray folder created by a mistyped mkdir brace expansion
+{css,js,pages,assets*/
+
+# ── OS / editor junk ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ── Optional ─────────────────────────────────────────────────
+# Release ZIPs are published through GitHub Releases (download_url),
+# so you may not want them in the repo. Uncomment to ignore them:
+# release-assets/

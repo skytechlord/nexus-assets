@@ -1,0 +1,832 @@
+/* ================================================================
+   css/blog.css — Blog Listing + Blog Post pages
+   ================================================================
+   Covers two pages:
+     pages/blog.html      — article listing with filters
+     pages/blog-post.html — single article reader
+
+   Depends on global.css being loaded first for:
+     CSS custom properties (--color-*, --space-*, --radius-*, etc.)
+     Base reset, typography, .container, .btn variants
+     .site-header, .nav, .site-footer, toast styles
+
+   TABLE OF CONTENTS
+   ─────────────────
+   1.  Blog listing — page header
+   2.  Blog listing — sticky filter bar
+   3.  Blog listing — results count + empty state
+   4.  Article card — base
+   5.  Article card — featured (wide hero) modifier
+   6.  Blog listing — grid layout
+   7.  Blog post — page wrapper + back link
+   8.  Blog post — article header (tag, title, byline)
+   9.  Blog post — cover image
+   10. Blog post — article body prose
+   11. Blog post — author block
+   12. Blog post — two-column layout
+   13. Blog post — sidebar
+   14. Blog post — table of contents
+   15. Blog post — related articles section
+   16. Responsive
+================================================================ */
+
+
+/* ================================================================
+   1. BLOG LISTING — PAGE HEADER
+================================================================ */
+.blog-header {
+  padding-top: calc(var(--nav-height) + var(--space-3xl));
+  padding-bottom: var(--space-2xl);
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(
+    to bottom,
+    rgba(124, 106, 245, 0.06),
+    transparent
+  );
+}
+
+.blog-header h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin-bottom: var(--space-sm);
+}
+
+.blog-header p {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+
+/* ================================================================
+   2. BLOG LISTING — STICKY FILTER BAR
+   ================================================================
+   Sticks below the fixed nav. Blurred glass background
+   keeps it readable when content scrolls behind it.
+================================================================ */
+.blog-filter-bar {
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: var(--nav-height);
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 50;
+}
+
+.blog-filter-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.blog-filter-bar__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+  margin-right: var(--space-xs);
+  flex-shrink: 0;
+}
+
+/* Individual filter pill */
+.blog-filter-btn {
+  padding: 0.38rem 1rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.blog-filter-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.blog-filter-btn.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+
+/* ================================================================
+   3. BLOG LISTING — RESULTS COUNT + EMPTY STATE
+================================================================ */
+.blog-section {
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-3xl);
+}
+
+.blog-results-info {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+.blog-results-info span {
+  color: var(--color-white);
+  font-weight: 600;
+}
+
+/* Empty state */
+.blog-empty {
+  display: none;
+  text-align: center;
+  padding: var(--space-3xl) var(--space-lg);
+}
+
+.blog-empty.visible {
+  display: block;
+}
+
+.blog-empty__icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+  opacity: 0.5;
+}
+
+.blog-empty h3 {
+  font-size: 1.1rem;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+.blog-empty p {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+
+/* ================================================================
+   4. ARTICLE CARD — BASE
+   ================================================================
+   Used on both the blog listing page (in the grid) and the
+   blog post page (in the related articles section).
+   Clicking the card is handled by JS onclick.
+================================================================ */
+.article-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    border-color var(--transition);
+}
+
+.article-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--color-accent);
+}
+
+/* ── Image section ──────────────────────────────────────────── */
+.article-card__img-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: var(--color-surface-2);
+  flex-shrink: 0;
+}
+
+.article-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.4s ease;
+  display: block;
+}
+
+.article-card:hover .article-card__img {
+  transform: scale(1.05);
+}
+
+/* Emoji fallback shown by JS onerror */
+.article-card__img-emoji {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
+/* "Featured" badge overlaid on the image */
+.article-card__featured-badge {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--color-accent);
+  color: var(--color-white);
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ── Card body ──────────────────────────────────────────────── */
+.article-card__body {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Category label */
+.article-card__tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--color-accent);
+  background: rgba(124, 106, 245, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+  margin-bottom: var(--space-sm);
+  width: fit-content;
+}
+
+.article-card__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-white);
+  line-height: 1.35;
+  margin-bottom: var(--space-sm);
+  /* Clamp to 3 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.article-card__excerpt {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+  flex: 1; /* pushes footer to the bottom */
+  margin-bottom: var(--space-lg);
+  /* Clamp to 3 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Card footer: author + read time ───────────────────────── */
+.article-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  margin-top: auto;
+  gap: var(--space-sm);
+}
+
+.article-card__author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0; /* allows text to truncate */
+}
+
+/* Gradient initials circle */
+.article-card__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent), #a99cf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--color-white);
+  flex-shrink: 0;
+}
+
+.article-card__author-name {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.article-card__meta {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+
+/* ================================================================
+   5. ARTICLE CARD — FEATURED (WIDE HERO) MODIFIER
+   ================================================================
+   The first card in the blog listing gets .article-card--featured.
+   On desktop: image left (45 %), body right — like a magazine spread.
+   On mobile: stacks vertically (reset in responsive section).
+
+   grid-column: 1 / -1 makes it span the full grid row.
+================================================================ */
+.article-card--featured {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  max-height: 340px;
+  border-color: rgba(124, 106, 245, 0.28);
+  background: linear-gradient(
+    135deg,
+    var(--color-surface),
+    rgba(124, 106, 245, 0.07)
+  );
+}
+
+.article-card--featured .article-card__img-wrap {
+  width: 44%;
+  height: auto;
+  max-height: 340px;
+  flex-shrink: 0;
+  border-radius: 0; /* corners handled by parent */
+}
+
+.article-card--featured .article-card__body {
+  padding: var(--space-xl);
+}
+
+.article-card--featured .article-card__title {
+  font-size: 1.3rem;
+  -webkit-line-clamp: 2;
+}
+
+.article-card--featured .article-card__excerpt {
+  -webkit-line-clamp: 4;
+}
+
+
+/* ================================================================
+   6. BLOG LISTING — GRID LAYOUT
+================================================================ */
+.blog-grid {
+  display: grid;
+  /* Auto-fill: min 280 px per card */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-xl);
+}
+
+
+/* ================================================================
+   7. BLOG POST — PAGE WRAPPER + BACK LINK
+================================================================ */
+.blog-post-page {
+  padding-top: calc(var(--nav-height) + var(--space-2xl));
+  padding-bottom: var(--space-3xl);
+}
+
+.article-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-bottom: var(--space-xl);
+  transition: color var(--transition);
+}
+
+.article-back-link:hover {
+  color: var(--color-accent);
+}
+
+
+/* ================================================================
+   8. BLOG POST — ARTICLE HEADER
+================================================================ */
+
+/* Category tag above the title */
+.article-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  background: rgba(124, 106, 245, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  margin-bottom: var(--space-md);
+}
+
+.article-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  line-height: 1.2;
+  margin-bottom: var(--space-lg);
+  color: var(--color-white);
+}
+
+/* Byline: avatar + name + date + read time */
+.article-byline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.article-byline__avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent), #a99cf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--color-white);
+  flex-shrink: 0;
+}
+
+.article-byline__info {
+  flex: 1;
+}
+
+.article-byline__name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-white);
+  margin-bottom: 2px;
+}
+
+.article-byline__meta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+
+/* ================================================================
+   9. BLOG POST — COVER IMAGE
+================================================================ */
+.article-cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  margin-bottom: var(--space-2xl);
+  background: var(--color-surface-2);
+  display: block;
+}
+
+/* Emoji fallback — shown by JS if image fails */
+.article-cover-fallback {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  display: none; /* JS sets to flex when needed */
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  margin-bottom: var(--space-2xl);
+}
+
+
+/* ================================================================
+   10. BLOG POST — ARTICLE BODY PROSE
+   ================================================================
+   max-width keeps line length comfortable (~65–75 chars).
+   First paragraph is slightly larger for an editorial feel.
+================================================================ */
+.article-body {
+  max-width: 680px;
+}
+
+.article-body p {
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
+}
+
+/* Lead paragraph — slightly larger and lighter in colour */
+.article-body p:first-child {
+  font-size: 1.07rem;
+  color: var(--color-text);
+  line-height: 1.8;
+}
+
+.article-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Bold text injected by JS (numbered list items) */
+.article-body strong {
+  color: var(--color-white);
+  font-weight: 600;
+}
+
+
+/* ================================================================
+   11. BLOG POST — AUTHOR BLOCK
+   ================================================================
+   "About the Author" card at the bottom of the article.
+================================================================ */
+.author-block {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: flex-start;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  margin-top: var(--space-2xl);
+}
+
+.author-block__avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent), #a99cf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-white);
+  flex-shrink: 0;
+}
+
+.author-block__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+.author-block__name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: var(--space-sm);
+}
+
+.author-block__bio {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+
+/* ================================================================
+   12. BLOG POST — TWO-COLUMN LAYOUT
+   ================================================================
+   Article content on the left (wider), sticky sidebar on the right.
+   Collapses to single column below 1000 px.
+================================================================ */
+.blog-post-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+
+/* ================================================================
+   13. BLOG POST — SIDEBAR
+================================================================ */
+.blog-sidebar {
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-lg));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* Individual sidebar card */
+.sidebar-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+/* Card section label */
+.sidebar-card__title {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* CTA card variant — amber-tinted */
+.sidebar-cta {
+  background: linear-gradient(
+    135deg,
+    rgba(124, 106, 245, 0.1),
+    rgba(245, 166, 35, 0.07)
+  );
+  border-color: rgba(124, 106, 245, 0.25);
+}
+
+.sidebar-cta p {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+/* Full-width button helper used inside sidebar */
+.btn--full {
+  width: 100%;
+  justify-content: center;
+}
+
+
+/* ================================================================
+   14. BLOG POST — TABLE OF CONTENTS
+================================================================ */
+.toc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toc-list__item {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  padding: 0.45rem var(--space-sm);
+  border-radius: var(--radius-sm);
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  line-height: 1.45;
+  transition:
+    color var(--transition),
+    border-color var(--transition),
+    background var(--transition);
+
+  /* Prevent very long paragraphs from blowing out the sidebar */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.toc-list__item:hover {
+  color: var(--color-accent);
+  border-left-color: var(--color-accent);
+  background: rgba(124, 106, 245, 0.07);
+}
+
+
+/* ================================================================
+   15. BLOG POST — RELATED ARTICLES SECTION
+   ================================================================
+   Appears below the two-column layout, full width.
+   Reuses .blog-grid and .article-card — no new card styles needed.
+   The featured modifier is explicitly removed for related cards
+   so they always render as standard-sized cards.
+================================================================ */
+.related-articles {
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-2xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.related-articles .section-header {
+  text-align: left;
+  margin-bottom: var(--space-xl);
+}
+
+.related-articles .section-title {
+  font-size: 1.4rem;
+}
+
+/* Constrain to 3 columns and ensure no featured-card stretching */
+.related-articles .blog-grid {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+/* Remove full-row span and horizontal layout for any card here */
+.related-articles .article-card--featured {
+  grid-column: auto;
+  flex-direction: column;
+  max-height: none;
+}
+
+.related-articles .article-card--featured .article-card__img-wrap {
+  width: 100%;
+  height: 180px;
+}
+
+
+/* ================================================================
+   16. RESPONSIVE
+================================================================ */
+
+/* ── Tablet (≤ 1000 px) ─────────────────────────────────────── */
+@media (max-width: 1000px) {
+
+  /* Sidebar moves below article content */
+  .blog-post-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-sidebar {
+    position: static;
+  }
+}
+
+/* ── Mobile (≤ 700 px) ──────────────────────────────────────── */
+@media (max-width: 700px) {
+
+  /* Featured card stacks vertically */
+  .article-card--featured {
+    flex-direction: column;
+    max-height: none;
+  }
+
+  .article-card--featured .article-card__img-wrap {
+    width: 100%;
+    height: 200px;
+    max-height: 200px;
+  }
+
+  /* Slightly smaller filter pills */
+  .blog-filter-btn {
+    font-size: 0.76rem;
+    padding: 0.32rem 0.85rem;
+  }
+
+  /* Byline wraps gracefully */
+  .article-byline {
+    gap: var(--space-sm);
+  }
+
+  /* Author block stacks */
+  .author-block {
+    flex-direction: column;
+  }
+
+  /* Blog header tighter on mobile */
+  .blog-header {
+    padding-top: calc(var(--nav-height) + var(--space-2xl));
+    padding-bottom: var(--space-xl);
+  }
+
+  /* Article image slightly shorter */
+  .article-card__img-wrap {
+    height: 170px;
+  }
+}
+
+/* ── Small mobile (≤ 420 px) ────────────────────────────────── */
+@media (max-width: 420px) {
+
+  /* Single-column card grid */
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .article-card__title {
+    font-size: 1rem;
+  }
+}
