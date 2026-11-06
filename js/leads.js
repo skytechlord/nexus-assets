@@ -91,6 +91,23 @@ async function submitLead(leadData) {
     };
   }
 
+  // Maximum field lengths — second layer of validation
+  if (record.first_name.length > 50) {
+    return { success: false, error: 'First name must not exceed 50 characters.' };
+  }
+
+  if (record.last_name.length > 50) {
+    return { success: false, error: 'Last name must not exceed 50 characters.' };
+  }
+
+  if (record.email.length > 254) {
+    return { success: false, error: 'Email must not exceed 254 characters.' };
+  }
+
+  if (record.message.length > 2000) {
+    return { success: false, error: 'Message must not exceed 2000 characters.' };
+  }
+
   // Basic email format check
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(record.email)) {
     return { success: false, error: 'Please enter a valid email address.' };
