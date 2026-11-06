@@ -405,13 +405,13 @@
           ? `Hi NexusAssets! I'm interested in: ${assetName}`
           : `Hi NexusAssets! I'd like to request: ${assetName}`
       );
-      waLink.href = `https://wa.me/2349035738136?text=`;
+      waLink.href = `https://wa.me/2349035738136?text=${waMsg}`;
     }
 
     // Email — pre-fill subject line
     const emailLink = document.getElementById('emailLink');
     if (emailLink && subject) {
-      emailLink.href = `mailto:skylurd001@gmail.com?subject=`;
+      emailLink.href = `mailto:skylurd001@gmail.com?subject=${encodeURIComponent(subject)}`;
     }
 
     // ── 4. Form submission ─────────────────────────────────────────

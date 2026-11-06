@@ -64,11 +64,49 @@ const toastContainer = document.createElement('div');
 toastContainer.id = 'toast-container';
 document.body.appendChild(toastContainer);
 
+/* ── Safety helpers ─────────────────────────────────────────────
+   escapeHTML(): turns & < > " ' into harmless text. Use it on every
+                 database value placed inside an HTML template string.
+   safeUrl():    returns the URL only if it is http(s) or a relative
+                 path; anything else (e.g. javascript:) becomes ''.
+─────────────────────────────────────────────────────────────── */
+function escapeHTML(value) {
+  if (value === null || value === undefined) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function safeUrl(url) {
+  if (typeof url !== 'string') return '';
+  const u = url.trim();
+  if (!u) return '';
+  // Has a scheme (xxx:)? Then it must be http or https.
+  if (/^[a-z][a-z0-9+.\-]*:/i.test(u)) {
+    return /^https?:/i.test(u) ? u : '';
+  }
+  // Protocol-relative URLs (//host) are not used by this site
+  if (u.startsWith('//')) return '';
+  return u; // relative path such as ../assets/x.png
+}
+
 function showToast(message, type = 'success', duration = 3000) {
   const toast = document.createElement('div');
-  toast.className = `toast toast--${type}`;
+  const safeType = ['success', 'info', 'error'].includes(type) ? type : 'info';
+  toast.className = `toast toast--${safeType}`;
   const icons = { success: '✓', info: 'ℹ', error: '✕' };
-  toast.innerHTML = `<span class="toast__icon">${icons[type] || icons.info}</span><span class="toast__message">${message}</span>`;
+  // Built with textContent so the message can never inject HTML
+  const iconEl = document.createElement('span');
+  iconEl.className   = 'toast__icon';
+  iconEl.textContent = icons[safeType];
+  const msgEl = document.createElement('span');
+  msgEl.className   = 'toast__message';
+  msgEl.textContent = message;
+  toast.appendChild(iconEl);
+  toast.appendChild(msgEl);
   toastContainer.appendChild(toast);
   requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('toast--visible')));
   setTimeout(() => {
@@ -88,34 +126,38 @@ function showToast(message, type = 'success', duration = 3000) {
 ================================================================ */
 
 function createResourceCardHTML(asset, basePath = '') {
+  // The click is handled by one listener below (data-asset-id), not by
+  // an inline onclick, so no database value is ever placed in JavaScript.
+  const assetId = Number(asset.id);
   return `
     <article
       class="resource-card"
-      onclick="goToDownload(${asset.id}, '${basePath}')"
+      data-asset-id="${Number.isFinite(assetId) ? assetId : ''}"
+      data-base-path="${escapeHTML(basePath)}"
       role="button"
       tabindex="0"
-      aria-label="View ${asset.title}"
+      aria-label="View ${escapeHTML(asset.title)}"
     >
       <div class="resource-card__thumb-wrap">
         <img
           class="resource-card__thumb-img"
-          src="${asset.image || ''}"
-          alt="${asset.title} preview"
+          src="${escapeHTML(safeUrl(asset.image))}"
+          alt="${escapeHTML(asset.title)} preview"
           loading="lazy"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
         />
         <div class="resource-card__thumb-emoji" style="display:none;">
-          ${asset.emoji || '📦'}
+          ${escapeHTML(asset.emoji) || '📦'}
         </div>
       </div>
       <div class="resource-card__body">
-        <span class="resource-card__tag">${asset.category_label || asset.category}</span>
-        <h3 class="resource-card__title">${asset.title}</h3>
-        <p class="resource-card__desc">${asset.description || ''}</p>
+        <span class="resource-card__tag">${escapeHTML(asset.category_label || asset.category)}</span>
+        <h3 class="resource-card__title">${escapeHTML(asset.title)}</h3>
+        <p class="resource-card__desc">${escapeHTML(asset.description)}</p>
         <div class="resource-card__footer">
           <span class="resource-card__meta">
             ${asset.type === 'free'
-              ? `⬇ ${formatDownloads(asset.downloads)}`
+              ? `⬇ ${escapeHTML(formatDownloads(asset.downloads))}`
               : '💎 Premium'}
           </span>
           ${asset.type === 'free'
@@ -139,6 +181,17 @@ function renderResourceCards(assets, containerId, basePath = '') {
 function goToDownload(id, basePath = '') {
   window.location.href = `${basePath}pages/download.html?id=${id}`;
 }
+
+// One listener handles clicks on every resource card (replaces the
+// old inline onclick attribute).
+document.addEventListener('click', function (event) {
+  const card = event.target.closest('.resource-card[data-asset-id]');
+  if (!card) return;
+  const id = parseInt(card.dataset.assetId, 10);
+  if (!id) return;
+  const basePath = card.dataset.basePath === '../' ? '../' : '';
+  goToDownload(id, basePath);
+});
 
 
 /* ================================================================
@@ -382,7 +435,7 @@ if (document.getElementById('assetTitle')) {
     const previewImg   = document.getElementById('assetPreviewImg');
     const previewEmoji = document.getElementById('assetPreviewEmoji');
     if (previewImg && previewEmoji) {
-      previewImg.src = asset.image || '';
+      previewImg.src = safeUrl(asset.image);
       previewImg.alt = asset.title;
       previewImg.onload  = () => { previewEmoji.style.display = 'none'; };
       previewImg.onerror = () => {
@@ -406,7 +459,12 @@ if (document.getElementById('assetTitle')) {
     const tagsContainer = document.getElementById('assetTags');
     if (tagsContainer) {
       const tags = Array.isArray(asset.tags) ? asset.tags : [];
-      tagsContainer.innerHTML = tags.map(tag => `<span>${tag}</span>`).join('');
+      tagsContainer.textContent = '';
+      tags.forEach(tag => {
+        const span = document.createElement('span');
+        span.textContent = tag;          // textContent: tags can never inject HTML
+        tagsContainer.appendChild(span);
+      });
     }
 
     // ── Show correct action panel based on type ────────────────
@@ -451,7 +509,7 @@ if (document.getElementById('assetTitle')) {
     if (relatedGrid) {
       const { data: relatedData } = await supabasePublicFetch(
         'resources',
-        `?category=eq.${asset.category}&published=eq.true&id=neq.${assetId}&limit=3`
+        `?category=eq.${encodeURIComponent(asset.category)}&published=eq.true&id=neq.${assetId}&limit=3`
       );
       if (relatedData && relatedData.length > 0) {
         renderResourceCards(relatedData, 'relatedGrid', '../');
@@ -465,12 +523,13 @@ if (document.getElementById('assetTitle')) {
     const downloadBtn = document.getElementById('downloadBtn');
     if (downloadBtn) {
       downloadBtn.addEventListener('click', function () {
-        if (!asset.download_url) {
+        const downloadUrl = safeUrl(asset.download_url);
+        if (!downloadUrl) {
           showToast('Download link not available yet.', 'info', 3000);
           return;
         }
         const link     = document.createElement('a');
-        link.href      = asset.download_url;
+        link.href      = downloadUrl;
         const safeName = asset.title
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')

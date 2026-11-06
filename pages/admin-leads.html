@@ -269,14 +269,41 @@
     document.body.appendChild(tc);
   })();
 
+  /* ================================================================
+     escapeHTML — turns text into harmless text before it is placed
+     inside an HTML template string (innerHTML).
+     Converts & < > " ' so the browser shows them as characters
+     instead of running them as HTML or code.
+     Use it on EVERY value that comes from the database.
+  ================================================================ */
+  function escapeHTML(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function showToast(message, type, duration) {
     type     = type     || 'success';
     duration = duration || 3000;
     const tc    = document.getElementById('toast-container');
     const toast = document.createElement('div');
-    toast.className = `toast toast--${type}`;
+    // Only allow known toast types in the class name
+    const safeType = ['success', 'info', 'error'].includes(type) ? type : 'info';
+    toast.className = `toast toast--${safeType}`;
     const icons = { success: '✓', info: 'ℹ', error: '✕' };
-    toast.innerHTML = `<span class="toast__icon">${icons[type] || icons.info}</span><span class="toast__message">${message}</span>`;
+    // Built with textContent so the message can never inject HTML
+    const iconEl = document.createElement('span');
+    iconEl.className   = 'toast__icon';
+    iconEl.textContent = icons[safeType];
+    const msgEl = document.createElement('span');
+    msgEl.className   = 'toast__message';
+    msgEl.textContent = message;
+    toast.appendChild(iconEl);
+    toast.appendChild(msgEl);
     tc.appendChild(toast);
     requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('toast--visible')));
     setTimeout(() => {
@@ -326,10 +353,13 @@
     };
 
     function statusBadge(status) {
-      const meta  = STATUS_META[status] || { label: status, color: '#7a7a9a' };
+      // Own-property check so odd values like "constructor" don't match
+      const known = Object.prototype.hasOwnProperty.call(STATUS_META, status);
+      const meta  = known ? STATUS_META[status] : { label: status, color: '#7a7a9a' };
+      // meta.color is always one of our fixed colours; label may be raw DB text
       return `<span class="lead-status-badge"
         style="color:${meta.color}; background:${meta.color}1a;">
-        ${meta.label}
+        ${escapeHTML(meta.label)}
       </span>`;
     }
 
@@ -363,7 +393,7 @@
           <div class="leads-state">
             <div class="leads-state__icon">⚠️</div>
             <h3>Failed to load leads</h3>
-            <p>${error}</p>
+            <p>${escapeHTML(error)}</p>
           </div>`;
         return;
       }
@@ -425,15 +455,15 @@
       }
 
       const rows = filteredLeads.map(lead => `
-        <tr data-id="${lead.id}" tabindex="0" role="button" aria-label="View lead from ${lead.first_name} ${lead.last_name}">
+        <tr data-id="${escapeHTML(lead.id)}" tabindex="0" role="button" aria-label="View lead from ${escapeHTML(lead.first_name)} ${escapeHTML(lead.last_name)}">
           <td>
-            <div style="font-weight:500;">${lead.first_name} ${lead.last_name}</div>
-            <div class="lead-cell-muted">${lead.email}</div>
+            <div style="font-weight:500;">${escapeHTML(lead.first_name)} ${escapeHTML(lead.last_name)}</div>
+            <div class="lead-cell-muted">${escapeHTML(lead.email)}</div>
           </td>
-          <td class="lead-cell-muted">${lead.whatsapp || '—'}</td>
+          <td class="lead-cell-muted">${escapeHTML(lead.whatsapp) || '—'}</td>
           <td>
-            <div style="font-size:0.85rem;">${lead.resource_title || '—'}</div>
-            <div class="lead-cell-muted">${lead.resource_type}</div>
+            <div style="font-size:0.85rem;">${escapeHTML(lead.resource_title) || '—'}</div>
+            <div class="lead-cell-muted">${escapeHTML(lead.resource_type)}</div>
           </td>
           <td>${statusBadge(lead.status)}</td>
           <td class="lead-cell-muted">${lead.marketing_consent
@@ -470,6 +500,28 @@
     }
 
     /* ================================================================
+       setSafeLink — fills a modal field with a link built safely.
+       - text : what the person sees (set with textContent)
+       - href : the full URL; the scheme (mailto:/https://) is fixed
+                by our code, only the encoded value comes from the DB
+       If there is no text or no usable URL, shows plain text or "—".
+    ================================================================ */
+    function setSafeLink(elementId, text, href, newTab) {
+      const el = document.getElementById(elementId);
+      el.textContent = '';                       // clear old content
+      if (!text) { el.textContent = '—'; return; }
+      if (!href) { el.textContent = text; return; }
+      const a = document.createElement('a');
+      a.href        = href;
+      a.textContent = text;
+      if (newTab) {
+        a.target = '_blank';
+        a.rel    = 'noopener noreferrer';
+      }
+      el.appendChild(a);
+    }
+
+    /* ================================================================
        MODAL — open with lead data
     ================================================================ */
     function openModal(id) {
@@ -482,14 +534,19 @@
         `${lead.first_name} ${lead.last_name}`;
       document.getElementById('mFirstName').textContent  = lead.first_name || '—';
       document.getElementById('mLastName').textContent   = lead.last_name  || '—';
-      document.getElementById('mEmail').innerHTML =
-        `<a href="mailto:${lead.email}">${lead.email}</a>`;
-      document.getElementById('mWhatsapp').innerHTML = lead.whatsapp
-        ? `<a href="https://wa.me/${lead.whatsapp.replace(/\D/g,'')}" target="_blank" rel="noopener">${lead.whatsapp}</a>`
-        : '—';
-      document.getElementById('mTelegram').innerHTML = lead.telegram
-        ? `<a href="https://t.me/${lead.telegram.replace('@','')}" target="_blank" rel="noopener">${lead.telegram}</a>`
-        : '—';
+      // Links are built as real elements: href and textContent are
+      // assigned as properties, so database text can never become HTML.
+      setSafeLink('mEmail', lead.email, lead.email
+        ? 'mailto:' + encodeURIComponent(lead.email).replace(/%40/g, '@')
+        : '', false);
+
+      const waDigits = (lead.whatsapp || '').replace(/\D/g, '');
+      setSafeLink('mWhatsapp', lead.whatsapp,
+        waDigits ? 'https://wa.me/' + waDigits : '', true);
+
+      const tgHandle = (lead.telegram || '').trim().replace(/^@/, '');
+      setSafeLink('mTelegram', lead.telegram,
+        tgHandle ? 'https://t.me/' + encodeURIComponent(tgHandle) : '', true);
       document.getElementById('mConsent').textContent =
         lead.marketing_consent ? '✓ Yes' : '✗ No';
       document.getElementById('mResource').textContent     = lead.resource_title || '—';

@@ -52,14 +52,73 @@
     document.body.appendChild(tc);
   })();
 
+  /* ── Safety helpers ───────────────────────────────────────────
+     escapeHTML(): turns & < > " ' into harmless text. Use it on every
+                   database value placed inside an HTML template string.
+     isSafeUrl():  true for an empty value, an http(s) URL or a relative
+                   path; false for anything else (e.g. javascript:).
+  ─────────────────────────────────────────────────────────────── */
+  function escapeHTML(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function isSafeUrl(url) {
+    const u = String(url || '').trim();
+
+    // Reject control characters and backslashes. Browsers may normalize these
+    // when interpreting special URLs, which can disguise a dangerous scheme.
+    if (/[\u0000-\u0020\u007f\\]/.test(u)) return false;
+    if (!u) return true;
+
+    // Absolute URLs must use an explicit HTTP(S) authority.
+    if (/^[a-z][a-z0-9+.-]*:/i.test(u)) {
+      if (!/^https?:\/\//i.test(u)) return false;
+
+      try {
+        const parsed = new URL(u);
+        return (parsed.protocol === 'http:' || parsed.protocol === 'https:') &&
+          Boolean(parsed.hostname);
+      } catch {
+        return false;
+      }
+    }
+
+    // Do not allow protocol-relative URLs (//host/path).
+    if (u.startsWith('//')) return false;
+
+    // Relative paths, query strings and fragments are allowed.
+    try {
+      const parsed = new URL(u, document.baseURI);
+      return parsed.protocol === window.location.protocol &&
+        parsed.origin === window.location.origin;
+    } catch {
+      return false;
+    }
+  }
+
   function showToast(message, type, duration) {
     type     = type     || 'success';
     duration = duration || 3000;
     const tc    = document.getElementById('toast-container');
     const toast = document.createElement('div');
-    toast.className = `toast toast--${type}`;
+    const safeType = ['success', 'info', 'error'].includes(type) ? type : 'info';
+    toast.className = `toast toast--${safeType}`;
     const icons = { success: '✓', info: 'ℹ', error: '✕' };
-    toast.innerHTML = `<span class="toast__icon">${icons[type]||'ℹ'}</span><span class="toast__message">${message}</span>`;
+    // Built with textContent so the message can never inject HTML
+    const iconEl = document.createElement('span');
+    iconEl.className   = 'toast__icon';
+    iconEl.textContent = icons[safeType];
+    const msgEl = document.createElement('span');
+    msgEl.className   = 'toast__message';
+    msgEl.textContent = message;
+    toast.appendChild(iconEl);
+    toast.appendChild(msgEl);
     tc.appendChild(toast);
     requestAnimationFrame(() => requestAnimationFrame(() =>
       toast.classList.add('toast--visible')
@@ -82,8 +141,10 @@
   }
 
   function typeBadge(type) {
-    const m = TYPE_META[type] || { label: type, cls: '' };
-    return `<span class="res-type-badge ${m.cls}">${m.label}</span>`;
+    const known = Object.prototype.hasOwnProperty.call(TYPE_META, type);
+    const m = known ? TYPE_META[type] : { label: type, cls: '' };
+    // m.cls is always one of our fixed class names (or ''); label may be raw DB text
+    return `<span class="res-type-badge ${m.cls}">${escapeHTML(m.label)}</span>`;
   }
 
   function pill(val) {
@@ -170,11 +231,12 @@
         : 'No resources match the current filters.'
     };
 
+    // subs.error can contain server text, so every message is escaped
     wrap.innerHTML = `
       <div class="res-state">
         <div class="res-state__icon">${icons[state]}</div>
         <h3>${titles[state]}</h3>
-        <p>${subs[state]}</p>
+        <p>${escapeHTML(subs[state])}</p>
       </div>`;
   }
 
@@ -196,21 +258,21 @@
 
     const rows = filtered.map(r => `
       <tr>
-        <td class="res-cell-muted">${r.id}</td>
+        <td class="res-cell-muted">${escapeHTML(r.id)}</td>
         <td>
           <div style="font-weight:500; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"
-               title="${r.title}">${r.title}</div>
-          <div class="res-cell-muted">${r.category_label || r.category}</div>
+               title="${escapeHTML(r.title)}">${escapeHTML(r.title)}</div>
+          <div class="res-cell-muted">${escapeHTML(r.category_label || r.category)}</div>
         </td>
         <td>${typeBadge(r.type)}</td>
         <td>${pill(r.featured)}</td>
         <td>${pill(r.published)}</td>
-        <td class="res-cell-muted">${r.downloads != null ? r.downloads.toLocaleString() : '0'}</td>
+        <td class="res-cell-muted">${r.downloads != null ? escapeHTML(r.downloads.toLocaleString()) : '0'}</td>
         <td class="res-cell-muted">${formatDate(r.date_added)}</td>
         <td>
           <div class="res-row-actions">
-            <button class="res-btn-edit"   data-id="${r.id}">Edit</button>
-            <button class="res-btn-delete" data-id="${r.id}">Delete</button>
+            <button class="res-btn-edit"   data-id="${escapeHTML(r.id)}">Edit</button>
+            <button class="res-btn-delete" data-id="${escapeHTML(r.id)}">Delete</button>
           </div>
         </td>
       </tr>`).join('');
@@ -379,7 +441,11 @@
       featured:        f('fFeatured').checked,
       date_added:      f('fDateAdded').value || new Date().toISOString().slice(0,10),
       type:            f('fType').value,
-      download_url:    f('fDownloadUrl').value.trim(),
+      // Only Free resources use a download URL. Clear stale hidden values
+      // for Premium/Contact records so an old unsafe URL cannot be retained.
+      download_url:    f('fType').value === 'free'
+        ? f('fDownloadUrl').value.trim()
+        : '',
       contact_subject: f('fContactSubject').value.trim(),
       published:       f('fPublished').checked,
       admin_notes:     f('fAdminNotes').value.trim()
@@ -396,11 +462,20 @@
     if (!record.category)       errors.push('Category is required.');
     if (!record.category_label) errors.push('Category Label is required.');
     if (!record.description)    errors.push('Description is required.');
+    if (!isSafeUrl(record.image))
+      errors.push('Image URL must start with https:// (or http://).');
+    if (record.type === 'free' && !isSafeUrl(record.download_url))
+      errors.push('Download URL must be a valid https://, http:// or relative URL.');
 
     // Mark fields red
     f('fTitle').classList.toggle('error',          !record.title);
     f('fCategoryLabel').classList.toggle('error',  !record.category_label);
     f('fDescription').classList.toggle('error',    !record.description);
+    f('fImage').classList.toggle('error',          !isSafeUrl(record.image));
+    f('fDownloadUrl').classList.toggle(
+      'error',
+      record.type === 'free' && !isSafeUrl(record.download_url)
+    );
 
     return errors;
   }
